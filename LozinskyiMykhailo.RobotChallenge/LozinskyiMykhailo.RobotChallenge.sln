@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LozinskyiMykhailo.RobotChallenge", "LozinskyiMykhailo.RobotChallenge\LozinskyiMykhailo.RobotChallenge.csproj", "{75B55C8C-8F10-4BE0-AD56-FFDE84632572}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LozinskyiMykhailo.RobotChallenge.Test", "LozinskyiMykhailo.RobotChallenge.Test\LozinskyiMykhailo.RobotChallenge.Test.csproj", "{ADBECE7E-AF07-453C-9454-D41ADD04EE0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{75B55C8C-8F10-4BE0-AD56-FFDE84632572}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75B55C8C-8F10-4BE0-AD56-FFDE84632572}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75B55C8C-8F10-4BE0-AD56-FFDE84632572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADBECE7E-AF07-453C-9454-D41ADD04EE0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADBECE7E-AF07-453C-9454-D41ADD04EE0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADBECE7E-AF07-453C-9454-D41ADD04EE0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADBECE7E-AF07-453C-9454-D41ADD04EE0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
