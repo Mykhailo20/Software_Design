@@ -102,5 +102,4 @@ $RECYCLE.BIN/
 
 # Files/directories added by me
 Tournament/
-*.sln
 .vs/
