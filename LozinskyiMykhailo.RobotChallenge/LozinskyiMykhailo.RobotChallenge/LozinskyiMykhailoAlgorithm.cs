@@ -68,7 +68,15 @@ namespace LozinskyiMykhailo.RobotChallenge
             }
             else
             {
-                return new MoveCommand() { NewPosition = stationPosition };
+                Position newPosition = stationPosition;
+                int distance = DistanceHelper.FindDistance(stationPosition, movingRobot.Position);
+                if (distance > 20) {
+                    // int dx = Math.Sign(stationPosition.X - movingRobot.Position.X) * Math.Min(Math.Abs(stationPosition.X - movingRobot.Position.X), ...?);
+                    int x = movingRobot.Position.X + (stationPosition.X - movingRobot.Position.X) * distance / 20;
+                    int y = movingRobot.Position.Y + (stationPosition.Y - movingRobot.Position.Y) * distance / 20;
+                    newPosition = new Position(x, y);
+                }
+                return new MoveCommand() { NewPosition = newPosition };
             }
         }
 
