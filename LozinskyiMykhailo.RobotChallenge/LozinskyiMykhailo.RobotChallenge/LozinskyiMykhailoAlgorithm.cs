@@ -9,6 +9,16 @@ namespace LozinskyiMykhailo.RobotChallenge
 {
     public class LozinskyiMykhailoAlgorithm : IRobotAlgorithm
     {
+        public LozinskyiMykhailoAlgorithm() {
+            Logger.OnLogRound += Logger_OnLogRound;
+        }
+
+        private void Logger_OnLogRound(object sender, LogRoundEventArgs e)
+        {
+            RoundCount += 1;
+        }
+
+        public int RoundCount { get; set; }
         public Position FindNearestFreeStation(Robot.Common.Robot movingRobot, Map map, IList<Robot.Common.Robot> robots)
         {
             EnergyStation nearest = null;
@@ -49,7 +59,7 @@ namespace LozinskyiMykhailo.RobotChallenge
         public RobotCommand DoStep(IList<Robot.Common.Robot> robots, int robotToMoveIndex, Map map)
         {
             Robot.Common.Robot movingRobot = robots[robotToMoveIndex];
-            if ((movingRobot.Energy > 500) && (robots.Count < map.Stations.Count))
+            if ((movingRobot.Energy > 500) && (robots.Count < map.Stations.Count) && (RoundCount < 40))
             {
                 return new CreateNewRobotCommand();
             }
