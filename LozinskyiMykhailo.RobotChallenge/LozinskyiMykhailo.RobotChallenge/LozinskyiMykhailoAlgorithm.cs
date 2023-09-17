@@ -81,13 +81,32 @@ namespace LozinskyiMykhailo.RobotChallenge
             return false; 
         }
         
-
+        public Position FindNearestFreeCell(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots, Position potentialFreePosition, Position stationPosition){
+            bool isCellFree = IsCellFree(potentialFreePosition, robot, robots);
+            if(isCellFree){
+                return potentialFreePosition;
+            }
+            else{
+                Position currentCellPosition = stationPosition.Copy();
+                for(int i = -1; i < 2; i++){
+                    currentCellPosition.X = stationPosition.X + i;
+                    for (int j =-1; j < 2; j++){
+                        currentCellPosition.Y = stationPosition.Y + j;
+                        if(IsCellFree(currentCellPosition, robot, robots)){
+                            return currentCellPosition;
+                        }
+                    }
+                }
+            }   
+            return potentialFreePosition; 
+        }
         public Position FindCellToGoPosition(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots)
         {
-            var CellToGo = map.GetNearbyResources(robot.Position, 100).OrderBy(obj =>
-                    Math.Abs(robot.Position.X - obj.Position.X) + Math.Abs(robot.Position.Y - obj.Position.Y))
+            var stationPosition = map.GetNearbyResources(robot.Position, 100).OrderBy(obj =>
+                Math.Abs(robot.Position.X - obj.Position.X) + Math.Abs(robot.Position.Y - obj.Position.Y))
                 .ToList()[0]
                 .Position;
+            var CellToGo = stationPosition.Copy();
             int numOfRobots = 2;
             if (IsStationSurrounded(CellToGo, robot, map, robots, numOfRobots))
             {
@@ -95,7 +114,7 @@ namespace LozinskyiMykhailo.RobotChallenge
                 return robot.Position;
             }
             else
-            {
+            {            
                 if (robot.Position.X - CellToGo.X < 0)
                 {
                     CellToGo.X -= 1;
@@ -112,8 +131,9 @@ namespace LozinskyiMykhailo.RobotChallenge
                 {
                     CellToGo.Y += 1;
                 }
+                CellToGo =  FindNearestFreeCell(robot, map, robots, CellToGo, stationPosition); 
                 return CellToGo;
-            }
+            }                                                                                                                                                                                                                                                                                                
         }
        
 
