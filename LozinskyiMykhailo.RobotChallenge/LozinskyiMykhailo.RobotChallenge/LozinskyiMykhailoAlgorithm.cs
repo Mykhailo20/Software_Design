@@ -80,10 +80,18 @@ namespace LozinskyiMykhailo.RobotChallenge
             }
             return false; 
         }
-        
+        /*public Position CalculateNextPosition(){
+
+        }*/
+
         public Position FindNearestFreeCell(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots, Position potentialFreePosition, Position stationPosition){
+            Position bestPosition = new Position();
+            bestPosition.X = potentialFreePosition.X;
+            bestPosition.Y = potentialFreePosition.Y;
+            int bestDistance = 100;
             bool isCellFree = IsCellFree(potentialFreePosition, robot, robots);
             if(isCellFree){
+                Debug.Print("FindNearestFreeCell: Cell is Free");
                 return potentialFreePosition;
             }
             else{
@@ -92,14 +100,18 @@ namespace LozinskyiMykhailo.RobotChallenge
                     currentCellPosition.X = stationPosition.X + i;
                     for (int j =-1; j < 2; j++){
                         currentCellPosition.Y = stationPosition.Y + j;
-                        if(IsCellFree(currentCellPosition, robot, robots)){
-                            return currentCellPosition;
+                        if(IsCellFree(currentCellPosition, robot, robots) && (Math.Abs(potentialFreePosition.X - currentCellPosition.X) + Math.Abs(potentialFreePosition.Y - currentCellPosition.Y)) <= bestDistance )
+                        {
+                            bestDistance = Math.Abs(potentialFreePosition.X - currentCellPosition.X) + Math.Abs(potentialFreePosition.Y - currentCellPosition.Y) ;
+                            bestPosition.X = currentCellPosition.X;
+                            bestPosition.Y = currentCellPosition.Y;
                         }
                     }
                 }
-            }   
-            return potentialFreePosition; 
+            }
+            return bestPosition; 
         }
+
         public Position FindCellToGoPosition(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots)
         {
             var stationPosition = map.GetNearbyResources(robot.Position, 100).OrderBy(obj =>
@@ -108,13 +120,8 @@ namespace LozinskyiMykhailo.RobotChallenge
                 .Position;
             var CellToGo = stationPosition.Copy();
             int numOfRobots = 2;
-            if (IsStationSurrounded(CellToGo, robot, map, robots, numOfRobots))
-            {
-                Console.WriteLine($"Station is surrounded by {numOfRobots} robots");
-                return robot.Position;
-            }
-            else
-            {            
+            //if (!IsStationSurrounded(CellToGo, robot, map, robots, numOfRobots))
+            //{
                 if (robot.Position.X - CellToGo.X < 0)
                 {
                     CellToGo.X -= 1;
@@ -131,14 +138,20 @@ namespace LozinskyiMykhailo.RobotChallenge
                 {
                     CellToGo.Y += 1;
                 }
-                CellToGo =  FindNearestFreeCell(robot, map, robots, CellToGo, stationPosition); 
+                CellToGo = FindNearestFreeCell(robot, map, robots, CellToGo, stationPosition);
                 return CellToGo;
-            }                                                                                                                                                                                                                                                                                                
+            //}
+            /*else
+            {
+                Debug.Write($"Station is surrounded by {numOfRobots} robots");
+                return robot.Position;
+            } */                                                                                                                                                                                                                                                                                             
         }
        
 
         public RobotCommand DoStep(IList<Robot.Common.Robot> robots, int robotToMoveIndex, Map map)
         {
+            const int energyToRemains = 50;
             var robot = robots[robotToMoveIndex];
             var CellToGo = FindCellToGoPosition(robot, map, robots);
 
@@ -150,10 +163,27 @@ namespace LozinskyiMykhailo.RobotChallenge
                 return new CollectEnergyCommand();
             }
             Distance.X = robot.Position.X - CellToGo.X;
-            Distance.Y = robot.Position.Y - CellToGo.Y;
-            if (Distance.X != 0) PositionToReturn.X -= Distance.X / Math.Abs(Distance.X);
-            if (Distance.Y != 0) PositionToReturn.Y -= Distance.Y / Math.Abs(Distance.Y);
-            return new MoveCommand() { NewPosition = PositionToReturn };
+            Distance.Y = robot.Position.Y - CellToGo.Y; 
+            
+            int distanceEnergy = DistanceHelper.FindDistance(CellToGo, robot.Position);
+
+            if(robot.Energy - energyToRemains >= distanceEnergy){
+                return new MoveCommand() { NewPosition = CellToGo };
+            }
+            else
+            {   
+               
+                PositionToReturn.X -= (Distance.X)/ 2;
+                PositionToReturn.Y -= (Distance.Y)/ 2;
+                if(DistanceHelper.FindDistance(PositionToReturn, robot.Position) + DistanceHelper.FindDistance(CellToGo, PositionToReturn) <= robot.Energy - 20){
+                    return new MoveCommand() { NewPosition = PositionToReturn };
+                }
+                else {
+                    if(Distance.X != 0) PositionToReturn.X += Distance.X/ 2 - (Distance.X)/Math.Abs(Distance.X) * 2;
+                    if(Distance.Y != 0) PositionToReturn.Y += Distance.Y/ 2 - (Distance.Y)/Math.Abs(Distance.Y) * 2;
+                }
+                return new MoveCommand() { NewPosition = PositionToReturn };
+            }
         }
 
         public string Author { 
