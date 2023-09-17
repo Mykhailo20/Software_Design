@@ -1,4 +1,4 @@
-﻿using Robot.Common;
+﻿ using Robot.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -80,9 +80,6 @@ namespace LozinskyiMykhailo.RobotChallenge
             }
             return false; 
         }
-        /*public Position CalculateNextPosition(){
-
-        }*/
 
         public Position FindNearestFreeCell(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots, Position potentialFreePosition, Position stationPosition){
             Position bestPosition = new Position();
@@ -100,7 +97,7 @@ namespace LozinskyiMykhailo.RobotChallenge
                     currentCellPosition.X = stationPosition.X + i;
                     for (int j =-1; j < 2; j++){
                         currentCellPosition.Y = stationPosition.Y + j;
-                        if(IsCellFree(currentCellPosition, robot, robots) && (Math.Abs(potentialFreePosition.X - currentCellPosition.X) + Math.Abs(potentialFreePosition.Y - currentCellPosition.Y)) <= bestDistance )
+                        if (IsCellFree(currentCellPosition, robot, robots) && (Math.Abs(potentialFreePosition.X - currentCellPosition.X) + Math.Abs(potentialFreePosition.Y - currentCellPosition.Y)) <= bestDistance )
                         {
                             bestDistance = Math.Abs(potentialFreePosition.X - currentCellPosition.X) + Math.Abs(potentialFreePosition.Y - currentCellPosition.Y) ;
                             bestPosition.X = currentCellPosition.X;
@@ -151,7 +148,8 @@ namespace LozinskyiMykhailo.RobotChallenge
 
         public RobotCommand DoStep(IList<Robot.Common.Robot> robots, int robotToMoveIndex, Map map)
         {
-            const int energyToRemains = 50;
+            const int energyToRemainsFirstRound = 50;
+            const int energyToRemainsAnyRound = 20;
             var robot = robots[robotToMoveIndex];
             var CellToGo = FindCellToGoPosition(robot, map, robots);
 
@@ -167,12 +165,16 @@ namespace LozinskyiMykhailo.RobotChallenge
             
             int distanceEnergy = DistanceHelper.FindDistance(CellToGo, robot.Position);
 
-            if(robot.Energy - energyToRemains >= distanceEnergy){
+            // Problem is here
+            if ((robot.Energy - energyToRemainsFirstRound >= distanceEnergy) && (RoundCount == 1) || (robot.Energy - energyToRemainsAnyRound >= distanceEnergy) && (RoundCount > 1))
+            {
                 return new MoveCommand() { NewPosition = CellToGo };
             }
             else
             {   
-               
+                if(robot.Energy >= distanceEnergy){
+                    return new MoveCommand() { NewPosition = CellToGo };
+                }
                 PositionToReturn.X -= (Distance.X)/ 2;
                 PositionToReturn.Y -= (Distance.Y)/ 2;
                 if(DistanceHelper.FindDistance(PositionToReturn, robot.Position) + DistanceHelper.FindDistance(CellToGo, PositionToReturn) <= robot.Energy - 20){
