@@ -1,7 +1,9 @@
 ﻿using Robot.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -56,37 +58,79 @@ namespace LozinskyiMykhailo.RobotChallenge
             return true;
         }
 
-        public RobotCommand DoStep(IList<Robot.Common.Robot> robots, int robotToMoveIndex, Map map)
+        public bool IsStationSurrounded(Position stationPosition, Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots,
+            int numberOfRobots)
         {
-            var Robot = robots[robotToMoveIndex];
-            var CellToGo = map.GetNearbyResources(Robot.Position, 100).OrderBy(obj =>
-                    Math.Abs(Robot.Position.X - obj.Position.X) + Math.Abs(Robot.Position.Y - obj.Position.Y))
+            int counter = 0;
+            Position currentCellPosition = stationPosition.Copy();
+            for(int i = -1; i < 2; i++){
+                currentCellPosition.X = stationPosition.X + i;
+                for (int j =-1; j < 2; j++){
+                    
+                    currentCellPosition.Y = stationPosition.Y + j;
+                    if(!IsCellFree(currentCellPosition, robot, robots)){
+                        counter++;
+                        // If more than two robots are within the station's energy collection radius, it is invalid
+                        if (counter >= numberOfRobots)
+                        {
+                            return true; 
+                        }
+                    }
+                }
+            }
+            return false; 
+        }
+        
+
+        public Position FindCellToGoPosition(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots)
+        {
+            var CellToGo = map.GetNearbyResources(robot.Position, 100).OrderBy(obj =>
+                    Math.Abs(robot.Position.X - obj.Position.X) + Math.Abs(robot.Position.Y - obj.Position.Y))
                 .ToList()[0]
                 .Position;
+            int numOfRobots = 2;
+            if (IsStationSurrounded(CellToGo, robot, map, robots, numOfRobots))
+            {
+                Console.WriteLine($"Station is surrounded by {numOfRobots} robots");
+                return robot.Position;
+            }
+            else
+            {
+                if (robot.Position.X - CellToGo.X < 0)
+                {
+                    CellToGo.X -= 1;
+                }
+                else if (robot.Position.X - CellToGo.X > 0)
+                {
+                    CellToGo.X += 1;
+                }
+                if (robot.Position.Y - CellToGo.Y < 0)
+                {
+                    CellToGo.Y -= 1;
+                }
+                else if (robot.Position.Y - CellToGo.Y > 0)
+                {
+                    CellToGo.Y += 1;
+                }
+                return CellToGo;
+            }
+        }
+       
+
+        public RobotCommand DoStep(IList<Robot.Common.Robot> robots, int robotToMoveIndex, Map map)
+        {
+            var robot = robots[robotToMoveIndex];
+            var CellToGo = FindCellToGoPosition(robot, map, robots);
+
             Position Distance = new Position();
-            Position PositionToReturn = Robot.Position;
-            if (Robot.Position.X - CellToGo.X < 0)
-            {
-                CellToGo.X -= 1;
-            }
-            else if (Robot.Position.X - CellToGo.X > 0)
-            {
-                CellToGo.X += 1;
-            }
-            if (Robot.Position.Y - CellToGo.Y < 0)
-            {
-                CellToGo.Y -= 1;
-            }
-            else if (Robot.Position.Y - CellToGo.Y > 0)
-            {
-                CellToGo.Y += 1;
-            }
-            if (Robot.Position.X == CellToGo.X && Robot.Position.Y == CellToGo.Y)
+            Position PositionToReturn = robot.Position;
+
+            if (robot.Position.X == CellToGo.X && robot.Position.Y == CellToGo.Y)
             {
                 return new CollectEnergyCommand();
             }
-            Distance.X = Robot.Position.X - CellToGo.X;
-            Distance.Y = Robot.Position.Y - CellToGo.Y;
+            Distance.X = robot.Position.X - CellToGo.X;
+            Distance.Y = robot.Position.Y - CellToGo.Y;
             if (Distance.X != 0) PositionToReturn.X -= Distance.X / Math.Abs(Distance.X);
             if (Distance.Y != 0) PositionToReturn.Y -= Distance.Y / Math.Abs(Distance.Y);
             return new MoveCommand() { NewPosition = PositionToReturn };

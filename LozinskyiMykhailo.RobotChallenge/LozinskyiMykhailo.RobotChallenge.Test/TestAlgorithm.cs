@@ -121,5 +121,34 @@ namespace LozinskyiMykhailo.RobotChallenge.Test
             Assert.AreEqual(isSecondStationFree, true);
             Assert.AreEqual(isThirdStationFree, true);
         }
+
+        [TestMethod]
+        public void TestIsStationSurrounded()
+        {
+            var algorithm = new LozinskyiMykhailoAlgorithm();
+            var map = new Map();
+            map.Stations.Add(new EnergyStation() { Energy = 1000, Position = new Position(1, 1), RecoveryRate = 2 });
+
+            var robots = new List<Robot.Common.Robot>() {
+                                                    new Robot.Common.Robot(){ Energy = 200, Position = new Position(10, 10) },
+                                                    new Robot.Common.Robot(){ Energy = 200, Position = new Position(1, 0)}      
+                                                };
+
+            bool stationIsSurrounded1 = algorithm.IsStationSurrounded(map.Stations[0].Position, robots[0], map, robots, 2);
+            Assert.IsFalse(stationIsSurrounded1);
+
+            robots.Add(new Robot.Common.Robot() { Energy = 200, Position = new Position(2, 1) });
+            bool stationIsSurrounded2 = algorithm.IsStationSurrounded(map.Stations[0].Position, robots[0], map, robots, 2);
+            Assert.IsTrue(stationIsSurrounded2);
+
+            
+            bool stationIsSurrounded3 = algorithm.IsStationSurrounded(map.Stations[0].Position, robots[0], map, robots, 3);
+            Assert.IsFalse(stationIsSurrounded3);
+
+            robots.Add(new Robot.Common.Robot() { Energy = 200, Position = new Position(2, 2) });
+            bool stationIsSurrounded4 = algorithm.IsStationSurrounded(map.Stations[0].Position, robots[0], map, robots, 3);
+            Assert.IsTrue(stationIsSurrounded4);
+
+        }
     }
 }
