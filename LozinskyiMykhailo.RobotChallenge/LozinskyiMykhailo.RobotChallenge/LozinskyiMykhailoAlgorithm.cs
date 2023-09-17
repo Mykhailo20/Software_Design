@@ -58,36 +58,38 @@ namespace LozinskyiMykhailo.RobotChallenge
 
         public RobotCommand DoStep(IList<Robot.Common.Robot> robots, int robotToMoveIndex, Map map)
         {
-            Robot.Common.Robot movingRobot = robots[robotToMoveIndex];
-            if ((movingRobot.Energy > 500) && (robots.Count < map.Stations.Count) && (RoundCount < 40))
+            var Robot = robots[robotToMoveIndex];
+            var CellToGo = map.GetNearbyResources(Robot.Position, 100).OrderBy(obj =>
+                    Math.Abs(Robot.Position.X - obj.Position.X) + Math.Abs(Robot.Position.Y - obj.Position.Y))
+                .ToList()[0]
+                .Position;
+            Position Distance = new Position();
+            Position PositionToReturn = Robot.Position;
+            if (Robot.Position.X - CellToGo.X < 0)
             {
-                return new CreateNewRobotCommand();
+                CellToGo.X -= 1;
             }
-
-            Position stationPosition = FindNearestFreeStation(robots[robotToMoveIndex], map, robots);
-
-
-            if (stationPosition == null)
+            else if (Robot.Position.X - CellToGo.X > 0)
             {
-                return null;
+                CellToGo.X += 1;
             }
-                
-            if (stationPosition == movingRobot.Position)
+            if (Robot.Position.Y - CellToGo.Y < 0)
+            {
+                CellToGo.Y -= 1;
+            }
+            else if (Robot.Position.Y - CellToGo.Y > 0)
+            {
+                CellToGo.Y += 1;
+            }
+            if (Robot.Position.X == CellToGo.X && Robot.Position.Y == CellToGo.Y)
             {
                 return new CollectEnergyCommand();
             }
-            else
-            {
-                Position newPosition = stationPosition;
-                int distance = DistanceHelper.FindDistance(stationPosition, movingRobot.Position);
-                if (distance > 100) {
-                    // int dx = Math.Sign(stationPosition.X - movingRobot.Position.X) * Math.Min(Math.Abs(stationPosition.X - movingRobot.Position.X), ...?);
-                    int x = movingRobot.Position.X + (stationPosition.X - movingRobot.Position.X) * distance / 100;
-                    int y = movingRobot.Position.Y + (stationPosition.Y - movingRobot.Position.Y) * distance / 100;
-                    newPosition = new Position(x, y);
-                }
-                return new MoveCommand() { NewPosition = newPosition };
-            }
+            Distance.X = Robot.Position.X - CellToGo.X;
+            Distance.Y = Robot.Position.Y - CellToGo.Y;
+            if (Distance.X != 0) PositionToReturn.X -= Distance.X / Math.Abs(Distance.X);
+            if (Distance.Y != 0) PositionToReturn.Y -= Distance.Y / Math.Abs(Distance.Y);
+            return new MoveCommand() { NewPosition = PositionToReturn };
         }
 
         public string Author { 
