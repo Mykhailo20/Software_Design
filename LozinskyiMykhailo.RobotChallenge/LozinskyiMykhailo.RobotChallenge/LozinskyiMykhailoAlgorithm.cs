@@ -24,6 +24,24 @@ namespace LozinskyiMykhailo.RobotChallenge
             RoundCount += 1;
         }
 
+        public bool IsStationFree(EnergyStation station, Robot.Common.Robot movingRobot, IList<Robot.Common.Robot> robots)
+        {
+            return IsCellFree(station.Position, movingRobot, robots);
+        }
+
+        public bool IsCellFree(Position cell, Robot.Common.Robot movingRobot, IList<Robot.Common.Robot> robots)
+        {
+            foreach (var robot in robots)
+            {
+                if (robot != movingRobot)
+                {
+                    if (robot.Position == cell)
+                        return false;
+                }
+            }
+            return true;
+        }
+
         public bool IsAlreadyNearStation(Map map, Robot.Common.Robot robot, IList<Robot.Common.Robot> robots)
         {
             Position nearestStation = FindNearestFreeStation(robot, map, robots);
@@ -43,47 +61,10 @@ namespace LozinskyiMykhailo.RobotChallenge
             return false;
         }
 
-        public Position FindNearestFreeStation(Robot.Common.Robot movingRobot, Map map, IList<Robot.Common.Robot> robots)
-        {
-            EnergyStation nearest = null;
-            int minDistance = int.MaxValue;
-            foreach (var station in map.Stations)
-            {
-                if (IsStationFree(station, movingRobot, robots))
-                {
-                    int d = DistanceHelper.FindDistance(station.Position, movingRobot.Position);
-                    if (d < minDistance)
-                    {
-                        minDistance = d;
-                        nearest = station;
-                    }
-                }
-            }
-            return nearest == null ? null : nearest.Position;
-        }
-
-        public bool IsStationFree(EnergyStation station, Robot.Common.Robot movingRobot, IList<Robot.Common.Robot> robots)
-        {
-            return IsCellFree(station.Position, movingRobot, robots);
-        }
-
-        public bool IsCellFree(Position cell, Robot.Common.Robot movingRobot, IList<Robot.Common.Robot> robots)
-        {
-            foreach (var robot in robots)
-            {
-                if (robot != movingRobot)
-                {
-                    if (robot.Position == cell)
-                        return false;
-                }
-            }
-            return true;
-        }
-
+        
         public bool IsValid(Position position) => position.X >= 0 && position.X < 100 && position.Y >= 0 && position.Y < 100;
 
-        public bool IsStationSurrounded(Position stationPosition, Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots,
-            int numberOfRobots)
+        public bool IsStationSurrounded(Position stationPosition, Robot.Common.Robot robot, IList<Robot.Common.Robot> robots, int numberOfRobots)
         {
             int counter = 0;
             Position currentCellPosition = stationPosition.Copy();
@@ -105,6 +86,28 @@ namespace LozinskyiMykhailo.RobotChallenge
             }
             return false; 
         }
+        public Position FindNearestFreeStation(Robot.Common.Robot movingRobot, Map map, IList<Robot.Common.Robot> robots)
+        {
+            EnergyStation nearest = null;
+            int minDistance = int.MaxValue;
+            int numberOfRobots = 2;
+            foreach (var station in map.Stations)
+            {
+                if (!IsStationSurrounded(station.Position, movingRobot, robots, numberOfRobots))
+                {
+                    //if (IsStationFree(station, movingRobot, robots))
+                    //{
+                        int d = DistanceHelper.FindDistance(station.Position, movingRobot.Position);
+                        if (d < minDistance)
+                        {
+                            minDistance = d;
+                            nearest = station;
+                        }
+                    //}
+                }
+            }
+            return nearest == null ? null : nearest.Position;
+        }
 
         public Position FindNearestFreeCell(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots, Position potentialFreePosition, Position stationPosition){
             Position bestPosition = new Position();
@@ -113,7 +116,7 @@ namespace LozinskyiMykhailo.RobotChallenge
             int bestDistance = 100;
             bool isCellFree = IsCellFree(potentialFreePosition, robot, robots);
             if(isCellFree){
-                Debug.Print("FindNearestFreeCell: Cell is Free");
+                //Debug.Print("FindNearestFreeCell: Cell is Free");
                 return potentialFreePosition;
             }
             else{
@@ -136,38 +139,31 @@ namespace LozinskyiMykhailo.RobotChallenge
 
         public Position FindCellToGoPosition(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots)
         {
-            var stationPosition = map.GetNearbyResources(robot.Position, 100).OrderBy(obj =>
+            /*var stationPosition = map.GetNearbyResources(robot.Position, 100).OrderBy(obj =>
                 Math.Abs(robot.Position.X - obj.Position.X) + Math.Abs(robot.Position.Y - obj.Position.Y))
                 .ToList()[0]
-                .Position;
+                .Position;*/
+            var stationPosition = FindNearestFreeStation(robot, map, robots);
             var CellToGo = stationPosition.Copy();
-            int numOfRobots = 2;
-            //if (!IsStationSurrounded(CellToGo, robot, map, robots, numOfRobots))
-            //{
-                if (robot.Position.X - CellToGo.X < 0)
-                {
-                    CellToGo.X -= 1;
-                }
-                else if (robot.Position.X - CellToGo.X > 0)
-                {
-                    CellToGo.X += 1;
-                }
-                if (robot.Position.Y - CellToGo.Y < 0)
-                {
-                    CellToGo.Y -= 1;
-                }
-                else if (robot.Position.Y - CellToGo.Y > 0)
-                {
-                    CellToGo.Y += 1;
-                }
-                CellToGo = FindNearestFreeCell(robot, map, robots, CellToGo, stationPosition);
-                return CellToGo;
-            //}
-            /*else
+
+            if (robot.Position.X - CellToGo.X < 0)
             {
-                Debug.Write($"Station is surrounded by {numOfRobots} robots");
-                return robot.Position;
-            } */                                                                                                                                                                                                                                                                                             
+                CellToGo.X -= 1;
+            }
+            else if (robot.Position.X - CellToGo.X > 0)
+            {
+                CellToGo.X += 1;
+            }
+            if (robot.Position.Y - CellToGo.Y < 0)
+            {
+                CellToGo.Y -= 1;
+            }
+            else if (robot.Position.Y - CellToGo.Y > 0)
+            {
+                CellToGo.Y += 1;
+            }
+            CellToGo = FindNearestFreeCell(robot, map, robots, CellToGo, stationPosition);
+            return CellToGo;                                                                                                                                                                                                                                                                                            
         }
        
 
