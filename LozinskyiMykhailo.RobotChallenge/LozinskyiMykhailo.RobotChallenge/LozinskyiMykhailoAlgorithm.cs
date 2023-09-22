@@ -11,6 +11,10 @@ namespace LozinskyiMykhailo.RobotChallenge
 {
     public class LozinskyiMykhailoAlgorithm : IRobotAlgorithm
     {
+        public int RoundCount { get; set; }
+        private int RobotCount { get; set; }
+        private int EnergyRadius = 1;
+
         public LozinskyiMykhailoAlgorithm() {
             Logger.OnLogRound += Logger_OnLogRound;
         }
@@ -20,7 +24,25 @@ namespace LozinskyiMykhailo.RobotChallenge
             RoundCount += 1;
         }
 
-        public int RoundCount { get; set; }
+        public bool IsAlreadyNearStation(Map map, Robot.Common.Robot robot, IList<Robot.Common.Robot> robots)
+        {
+            Position nearestStation = FindNearestFreeStation(robot, map, robots);
+            Position currentCellPosition = nearestStation.Copy();
+            for (int i = -1; i < 2; i++)
+            {
+                currentCellPosition.X = nearestStation.X + i;
+                for (int j = -1; j < 2; j++)
+                {
+                    currentCellPosition.Y = nearestStation.Y + j;
+                    if (robot.Position.X == currentCellPosition.X && robot.Position.Y == currentCellPosition.Y)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public Position FindNearestFreeStation(Robot.Common.Robot movingRobot, Map map, IList<Robot.Common.Robot> robots)
         {
             EnergyStation nearest = null;
@@ -58,6 +80,8 @@ namespace LozinskyiMykhailo.RobotChallenge
             return true;
         }
 
+        public bool IsValid(Position position) => position.X >= 0 && position.X < 100 && position.Y >= 0 && position.Y < 100;
+
         public bool IsStationSurrounded(Position stationPosition, Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots,
             int numberOfRobots)
         {
@@ -68,7 +92,8 @@ namespace LozinskyiMykhailo.RobotChallenge
                 for (int j =-1; j < 2; j++){
                     
                     currentCellPosition.Y = stationPosition.Y + j;
-                    if(!IsCellFree(currentCellPosition, robot, robots)){
+                    if(!IsCellFree(currentCellPosition, robot, robots) && IsValid(currentCellPosition))
+                    {
                         counter++;
                         // If more than two robots are within the station's energy collection radius, it is invalid
                         if (counter >= numberOfRobots)
@@ -148,44 +173,47 @@ namespace LozinskyiMykhailo.RobotChallenge
 
         public RobotCommand DoStep(IList<Robot.Common.Robot> robots, int robotToMoveIndex, Map map)
         {
-            const int energyToRemainsFirstRound = 50;
-            const int energyToRemainsAnyRound = 20;
             var robot = robots[robotToMoveIndex];
-            var CellToGo = FindCellToGoPosition(robot, map, robots);
 
-            Position Distance = new Position();
-            Position PositionToReturn = robot.Position;
+            if (robot.Energy > 300 && RobotCount <= 99 && RoundCount <= 45)
+            {
+                RobotCount += 1;
+                return new CreateNewRobotCommand();
+            }
 
-            if (robot.Position.X == CellToGo.X && robot.Position.Y == CellToGo.Y)
+            var cellToGo = FindCellToGoPosition(robot, map, robots);
+
+            Position distance = new Position();
+            Position positionToReturn = robot.Position;
+
+            if (IsAlreadyNearStation(map, robot, robots))
             {
                 return new CollectEnergyCommand();
             }
-            Distance.X = robot.Position.X - CellToGo.X;
-            Distance.Y = robot.Position.Y - CellToGo.Y; 
+
+            distance.X = robot.Position.X - cellToGo.X;
+            distance.Y = robot.Position.Y - cellToGo.Y; 
             
-            int distanceEnergy = DistanceHelper.FindDistance(CellToGo, robot.Position);
+            int distanceEnergy = DistanceHelper.FindDistance(cellToGo, robot.Position);
+
+            const int energyToRemainsFirstRound = 50;
+            const int energyToRemainsAnyRound = 20;
 
             // Problem is here
             if ((robot.Energy - energyToRemainsFirstRound >= distanceEnergy) && (RoundCount == 1) || (robot.Energy - energyToRemainsAnyRound >= distanceEnergy) && (RoundCount > 1))
             {
-                return new MoveCommand() { NewPosition = CellToGo };
+                return new MoveCommand() { NewPosition = cellToGo };
             }
-            else
-            {   
-                if(robot.Energy >= distanceEnergy){
-                    return new MoveCommand() { NewPosition = CellToGo };
-                }
-                PositionToReturn.X -= (Distance.X)/ 2;
-                PositionToReturn.Y -= (Distance.Y)/ 2;
-                if(DistanceHelper.FindDistance(PositionToReturn, robot.Position) + DistanceHelper.FindDistance(CellToGo, PositionToReturn) <= robot.Energy - 20){
-                    return new MoveCommand() { NewPosition = PositionToReturn };
-                }
-                else {
-                    if(Distance.X != 0) PositionToReturn.X += Distance.X/ 2 - (Distance.X)/Math.Abs(Distance.X) * 2;
-                    if(Distance.Y != 0) PositionToReturn.Y += Distance.Y/ 2 - (Distance.Y)/Math.Abs(Distance.Y) * 2;
-                }
-                return new MoveCommand() { NewPosition = PositionToReturn };
+ 
+            positionToReturn.X -= distance.X/ 2;
+            positionToReturn.Y -= distance.Y/ 2;
+            if(DistanceHelper.FindDistance(positionToReturn, robot.Position) + DistanceHelper.FindDistance(cellToGo, positionToReturn) <= robot.Energy - energyToRemainsAnyRound)
+            {
+                return new MoveCommand() { NewPosition = positionToReturn };
             }
+            if (distance.X != 0) positionToReturn.X += distance.X/2 - distance.X/Math.Abs(distance.X) * 2;
+            if(distance.Y != 0) positionToReturn.Y += distance.Y/2 - distance.Y/Math.Abs(distance.Y) * 2;
+            return new MoveCommand() { NewPosition = positionToReturn };
         }
 
         public string Author { 
