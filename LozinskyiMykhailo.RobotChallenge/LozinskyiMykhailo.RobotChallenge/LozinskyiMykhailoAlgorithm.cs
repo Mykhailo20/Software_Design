@@ -238,7 +238,7 @@ namespace LozinskyiMykhailo.RobotChallenge
 
             if(RoundCount > 40)
             {
-                energyToCollect = 40;
+                energyToCollect = 20;
             }
             if (RoundCount == 30 || RoundCount == 40)
             {
@@ -259,7 +259,7 @@ namespace LozinskyiMykhailo.RobotChallenge
                 }
             }
 
-            if ((RoundCount >= 20) && (RoundCount <= 22) && (RobotCount >= 85) && (SmallMigrationCount == 0))
+            if ((RoundCount >= 20) && (RoundCount <= 23) && (RobotCount >= 85) && (SmallMigrationCount == 0))
             {
                 foreach (KeyValuePair<int, Position> bestPosition in bestPositions)
                 {
@@ -281,6 +281,10 @@ namespace LozinskyiMykhailo.RobotChallenge
             if (robot.Energy > 300 && RobotCount <= 89 && RoundCount <= 45) // RobotCount <= 99
             {
                 RobotCount += 1;
+                if(RobotCount == 90)
+                {
+                    energyToCollect = 25;
+                }
                 return new CreateNewRobotCommand();
             }
 
@@ -324,7 +328,7 @@ namespace LozinskyiMykhailo.RobotChallenge
                 {
                     if (IsCellFree(cell.Value, robot, robots) &&
                         DistanceHelper.FindDistance(robot.Position, cell.Value) + 10 < cell.Key &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 10 <= 50 &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 10 <= 60 &&
                         IsAvailablePosition(map, robots, cell.Value, Author) &&
                         IsAvailablePosition(map, robots, cell.Value, "Petrushynets Erikh") &&
                         cell.Value != robot.Position)
@@ -334,7 +338,7 @@ namespace LozinskyiMykhailo.RobotChallenge
 
                     if (!IsCellFree(cell.Value, robot, robots) &&
                         DistanceHelper.FindDistance(robot.Position, cell.Value) + 20 < cell.Key &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 20 <= 60 &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 20 <= 70 &&
                         IsAvailablePosition(map, robots, cell.Value, Author) &&
                         IsAvailablePosition(map, robots, cell.Value, "Petrushynets Erikh") &&
                         cell.Value != robot.Position)
