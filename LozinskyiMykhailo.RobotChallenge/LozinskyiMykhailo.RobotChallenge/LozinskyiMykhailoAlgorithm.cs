@@ -13,7 +13,7 @@ namespace LozinskyiMykhailo.RobotChallenge
     {
         public int RoundCount { get; set; }
         private int RobotCount { get; set; }
-        private int EnergyRadius = 1;
+        private int SmallMigrationCount { get; set; }
 
         public LozinskyiMykhailoAlgorithm() {
             Logger.OnLogRound += Logger_OnLogRound;
@@ -231,7 +231,7 @@ namespace LozinskyiMykhailo.RobotChallenge
             var robot = robots[robotToMoveIndex];
             List<KeyValuePair<int, Position>> bestPositions = BestPositions(map, robot);
 
-            if (RoundCount == 30 && RoundCount == 40)
+            if (RoundCount == 28 && RoundCount == 28 && RoundCount == 42)
             {
                 foreach (KeyValuePair<int, Position> bestPosition in bestPositions)
                 {
@@ -245,6 +245,23 @@ namespace LozinskyiMykhailo.RobotChallenge
                         };
                 }
             }
+
+            if ((RoundCount >= 20) && (RoundCount <= 21) && (RobotCount >= 85) && (SmallMigrationCount == 0))
+            {
+                foreach (KeyValuePair<int, Position> bestPosition in bestPositions)
+                {
+
+                    if (IsAvailablePosition(map, robots, bestPosition.Value,
+                            Author) && (robot.Energy > DistanceHelper.FindDistance(robot.Position, bestPosition.Value)) &&
+                            (bestPosition.Value != robot.Position))
+                        return new MoveCommand
+                        {
+                            NewPosition = bestPosition.Value
+                        };
+                }
+                SmallMigrationCount += 1;
+            }
+
             if (robot.Energy > 300 && RobotCount <= 89 && RoundCount <= 45) // RobotCount <= 99
             {
                 RobotCount += 1;
@@ -256,7 +273,7 @@ namespace LozinskyiMykhailo.RobotChallenge
             {
                 foreach (EnergyStation energyStation in nearbyResources)
                 {
-                    if (energyStation.Energy >= 75)
+                    if (energyStation.Energy >= 75 || RoundCount > 48)
                         return new CollectEnergyCommand();
                 }
             }
@@ -307,15 +324,18 @@ namespace LozinskyiMykhailo.RobotChallenge
                     }
                 }
             }
-
-            Position nearestPosition = FindCellToGoPosition(robot, map, robots);
-            Position distance = new Position();
-            Position positionToReturn = robot.Position;
-            distance.X = robot.Position.X - nearestPosition.X;
-            distance.Y = robot.Position.Y - nearestPosition.Y;
-            if (distance.X != 0) positionToReturn.X -= distance.X / Math.Abs(distance.X) * 2;
-            if (distance.Y != 0) positionToReturn.Y -= distance.Y / Math.Abs(distance.Y) * 2;
-            return new MoveCommand() { NewPosition = positionToReturn };
+            if(!IsAlreadyNearStation(map, robot, robots))
+            {
+                Position nearestPosition = FindCellToGoPosition(robot, map, robots);
+                Position distance = new Position();
+                Position positionToReturn = robot.Position;
+                distance.X = robot.Position.X - nearestPosition.X;
+                distance.Y = robot.Position.Y - nearestPosition.Y;
+                if (distance.X != 0) positionToReturn.X -= distance.X / Math.Abs(distance.X) * 2;
+                if (distance.Y != 0) positionToReturn.Y -= distance.Y / Math.Abs(distance.Y) * 2;
+                return new MoveCommand() { NewPosition = positionToReturn };
+            }
+            return new CollectEnergyCommand();
         }
 
         public string Author { 
