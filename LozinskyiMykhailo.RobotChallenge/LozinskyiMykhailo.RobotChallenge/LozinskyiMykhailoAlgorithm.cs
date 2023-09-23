@@ -101,13 +101,15 @@ namespace LozinskyiMykhailo.RobotChallenge
             }
             return false; 
         }
+
+        // Changed
         public Position FindNearestFreeStation(Robot.Common.Robot movingRobot, Map map, IList<Robot.Common.Robot> robots, int numberOfRobots)
         {
             EnergyStation nearest = null;
             int minDistance = int.MaxValue;
             foreach (var station in map.Stations)
             {
-                if (!IsStationSurrounded(station.Position, movingRobot, robots, numberOfRobots))
+                if (!IsStationSurrounded(station.Position, movingRobot, robots, numberOfRobots) && (station.Energy > 75) && (station.Position != movingRobot.Position))
                 {
                     //if (IsStationFree(station, movingRobot, robots))
                     //{
@@ -120,7 +122,9 @@ namespace LozinskyiMykhailo.RobotChallenge
                     //}
                 }
             }
-            return nearest == null ? null : nearest.Position;
+            return (nearest == null) ? map.GetNearbyResources(movingRobot.Position, 100).OrderBy(obj =>
+                    Math.Abs(movingRobot.Position.X - obj.Position.X) + Math.Abs(movingRobot.Position.Y - obj.Position.Y))
+                .ToList()[0].Position : nearest.Position;
         }
 
         public Position FindNearestFreeCell(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots, Position potentialFreePosition, Position stationPosition){
@@ -129,7 +133,7 @@ namespace LozinskyiMykhailo.RobotChallenge
             bestPosition.Y = potentialFreePosition.Y;
             int bestDistance = 100000;
             bool isCellFree = IsCellFree(potentialFreePosition, robot, robots);
-            if(isCellFree){
+            if(isCellFree && (IsValid(potentialFreePosition)) && (potentialFreePosition != robot.Position)){
                 //Debug.Print("FindNearestFreeCell: Cell is Free");
                 return potentialFreePosition;
             }
@@ -142,7 +146,8 @@ namespace LozinskyiMykhailo.RobotChallenge
                         if (IsCellFree(currentCellPosition, robot, robots) && 
                             (Math.Abs(potentialFreePosition.X - currentCellPosition.X) + 
                             Math.Abs(potentialFreePosition.Y - currentCellPosition.Y)) <= bestDistance 
-                            && IsValid(currentCellPosition))
+                            && IsValid(currentCellPosition)
+                            && (potentialFreePosition != robot.Position))
                         {
                             bestDistance = Math.Abs(potentialFreePosition.X - currentCellPosition.X) + 
                                 Math.Abs(potentialFreePosition.Y - currentCellPosition.Y) ;
@@ -197,7 +202,7 @@ namespace LozinskyiMykhailo.RobotChallenge
                 .ToList()[0]
                 .Position;*/
             int numberOfRobots = 1;
-            var stationPosition = FindNearestFreeStation(robot, map, robots, numberOfRobots);
+            var stationPosition = FindNearestFreeStation(robot, map, robots, numberOfRobots);   // returns null
             var CellToGo = stationPosition.Copy();
 
             if (robot.Position.X - CellToGo.X < 0)
@@ -284,8 +289,8 @@ namespace LozinskyiMykhailo.RobotChallenge
                 foreach (var cell in bestPositions)
                 {
                     if (IsCellFree(cell.Value, robot, robots) &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) < cell.Key &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) <= 50 &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 20 < cell.Key &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 20 <= 100 &&
                         IsAvailablePosition(map, robots, cell.Value, Author) && 
                         cell.Value != robot.Position)
                     {
@@ -293,8 +298,8 @@ namespace LozinskyiMykhailo.RobotChallenge
                     }
 
                     if (!IsCellFree(cell.Value, robot, robots) &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 10 < cell.Key &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 10 <= 60 &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 30 < cell.Key &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 30 <= 110 &&
                         IsAvailablePosition(map, robots, cell.Value, Author) && 
                         cell.Value != robot.Position)
                     {
