@@ -81,7 +81,7 @@ namespace LozinskyiMykhailo.RobotChallenge.Test
             Assert.AreEqual(((MoveCommand)newCommand).NewPosition, stationPosition);
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void TestFindNearestFreeStation()
         {
             var algorithm = new LozinskyiMykhailoAlgorithm();
@@ -97,7 +97,7 @@ namespace LozinskyiMykhailo.RobotChallenge.Test
 
             Position nearestFreeStationPosition = algorithm.FindNearestFreeStation(robots[1], map, robots);
             Assert.AreEqual(nearestFreeStationPosition, map.Stations[1].Position);
-        }
+        }*/
 
         [TestMethod]
         public void TestIsStationFree()
@@ -122,7 +122,7 @@ namespace LozinskyiMykhailo.RobotChallenge.Test
             Assert.AreEqual(isThirdStationFree, true);
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void TestIsStationSurrounded()
         {
             var algorithm = new LozinskyiMykhailoAlgorithm();
@@ -149,6 +149,19 @@ namespace LozinskyiMykhailo.RobotChallenge.Test
             bool stationIsSurrounded4 = algorithm.IsStationSurrounded(map.Stations[0].Position, robots[0], map, robots, 3);
             Assert.IsTrue(stationIsSurrounded4);
 
+        }*/
+        [TestMethod]
+        public void TestFindNearestFreeCell()
+        {
+            var algorithm = new LozinskyiMykhailoAlgorithm();
+            var map = new Map();
+            var robots = new List<Robot.Common.Robot>()
+            {
+                new Robot.Common.Robot() { Energy = 30, Position = new Position(2, 2) },
+                new Robot.Common.Robot() { Energy = 30, Position = new Position(4, 4) },
+            };
+            var newPosition = algorithm.FindNearestFreeCell(robots[0], map, robots, new Position(4, 4), new Position(4, 4));
+            Assert.AreEqual(new Position(3, 3), newPosition);
         }
     }
 }

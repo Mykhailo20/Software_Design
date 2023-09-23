@@ -129,8 +129,8 @@ namespace LozinskyiMykhailo.RobotChallenge
 
         public Position FindNearestFreeCell(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots, Position potentialFreePosition, Position stationPosition){
             Position bestPosition = new Position();
-            bestPosition.X = potentialFreePosition.X;
-            bestPosition.Y = potentialFreePosition.Y;
+            bestPosition.X = robot.Position.X;
+            bestPosition.Y = robot.Position.Y;
             int bestDistance = 100000;
             bool isCellFree = IsCellFree(potentialFreePosition, robot, robots);
             if(isCellFree && (IsValid(potentialFreePosition)) && (potentialFreePosition != robot.Position) &&
@@ -147,15 +147,15 @@ namespace LozinskyiMykhailo.RobotChallenge
                     for (int j =-1; j < 2; j++){
                         currentCellPosition.Y = stationPosition.Y + j;
                         if (IsCellFree(currentCellPosition, robot, robots) && 
-                            (Math.Abs(potentialFreePosition.X - currentCellPosition.X) + 
-                            Math.Abs(potentialFreePosition.Y - currentCellPosition.Y)) <= bestDistance 
+                            (Math.Abs(robot.Position.X - currentCellPosition.X) + 
+                            Math.Abs(robot.Position.Y - currentCellPosition.Y)) <= bestDistance 
                             && IsValid(currentCellPosition)
                             && (currentCellPosition != robot.Position) &&
                             IsAvailablePosition(map, robots, currentCellPosition, Author) &&
                             IsAvailablePosition(map, robots, currentCellPosition, "Petrushynets Erikh"))
                         {
-                            bestDistance = Math.Abs(potentialFreePosition.X - currentCellPosition.X) + 
-                                Math.Abs(potentialFreePosition.Y - currentCellPosition.Y) ;
+                            bestDistance = Math.Abs(robot.Position.X - currentCellPosition.X) + 
+                                Math.Abs(robot.Position.Y - currentCellPosition.Y) ;
                             bestPosition.X = currentCellPosition.X;
                             bestPosition.Y = currentCellPosition.Y;
                         }
@@ -235,8 +235,11 @@ namespace LozinskyiMykhailo.RobotChallenge
         {
             var robot = robots[robotToMoveIndex];
             List<KeyValuePair<int, Position>> bestPositions = BestPositions(map, robot);
-
-            if(RoundCount > 40)
+            if (RoundCount >= 25)
+            {
+                energyToCollect = 25;
+            }
+            if (RoundCount > 40)
             {
                 energyToCollect = 20;
             }
@@ -366,6 +369,11 @@ namespace LozinskyiMykhailo.RobotChallenge
             distance.Y = robot.Position.Y - nearestPosition.Y;
             if (distance.X != 0) positionToReturn.X -= distance.X / Math.Abs(distance.X) * 2;
             if (distance.Y != 0) positionToReturn.Y -= distance.Y / Math.Abs(distance.Y) * 2;
+            if(IsCellFree(positionToReturn, robot, robots))
+            {
+                return new MoveCommand() { NewPosition = positionToReturn };
+            }
+            positionToReturn = FindNearestFreeCell(robot, map, robots, positionToReturn, positionToReturn);
             return new MoveCommand() { NewPosition = positionToReturn };
         }
 
