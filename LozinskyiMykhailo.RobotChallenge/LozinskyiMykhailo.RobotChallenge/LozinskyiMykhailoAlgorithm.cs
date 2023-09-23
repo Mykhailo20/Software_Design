@@ -14,7 +14,7 @@ namespace LozinskyiMykhailo.RobotChallenge
         public int RoundCount { get; set; }
         private int RobotCount { get; set; }
         private int SmallMigrationCount { get; set; }
-
+        private int energyToCollect = 50;
         public LozinskyiMykhailoAlgorithm() {
             Logger.OnLogRound += Logger_OnLogRound;
         }
@@ -236,15 +236,21 @@ namespace LozinskyiMykhailo.RobotChallenge
             var robot = robots[robotToMoveIndex];
             List<KeyValuePair<int, Position>> bestPositions = BestPositions(map, robot);
 
-            if (RoundCount == 28 || RoundCount == 35 || RoundCount == 42)
+            if(RoundCount > 40)
+            {
+                energyToCollect = 40;
+            }
+            if (RoundCount == 30 || RoundCount == 40)
             {
                 foreach (KeyValuePair<int, Position> bestPosition in bestPositions)
                 {
 
                     if (IsAvailablePosition(map, robots, bestPosition.Value, Author) && 
                         IsAvailablePosition(map, robots, bestPosition.Value, "Petrushynets Erikh") &&
-                         DistanceHelper.FindDistance(robot.Position, bestPosition.Value) < bestPosition.Key &&
+                        (DistanceHelper.FindDistance(robot.Position, bestPosition.Value) + 
+                        DistanceHelper.FindDistance(robot.Position, bestPosition.Value) / 2 < bestPosition.Key) &&
                         (robot.Energy > DistanceHelper.FindDistance(robot.Position, bestPosition.Value) + 10) &&
+                        DistanceHelper.FindDistance(robot.Position, bestPosition.Value) <= 400 &&
                             (bestPosition.Value != robot.Position))
                         return new MoveCommand
                         {
@@ -260,7 +266,8 @@ namespace LozinskyiMykhailo.RobotChallenge
 
                     if (IsAvailablePosition(map, robots, bestPosition.Value, Author) &&
                         IsAvailablePosition(map, robots, bestPosition.Value, "Petrushynets Erikh") &&
-                        DistanceHelper.FindDistance(robot.Position, bestPosition.Value) < bestPosition.Key &&
+                        (DistanceHelper.FindDistance(robot.Position, bestPosition.Value) +
+                        DistanceHelper.FindDistance(robot.Position, bestPosition.Value) / 2 < bestPosition.Key) &&
                         (robot.Energy > DistanceHelper.FindDistance(robot.Position, bestPosition.Value) + 10) &&
                             (bestPosition.Value != robot.Position))
                         return new MoveCommand
@@ -282,7 +289,7 @@ namespace LozinskyiMykhailo.RobotChallenge
             {
                 foreach (EnergyStation energyStation in nearbyResources)
                 {
-                    if (energyStation.Energy >= 50 || RoundCount >= 48)
+                    if (energyStation.Energy >= energyToCollect || RoundCount >= 48)
                         return new CollectEnergyCommand();
                 }
             }
