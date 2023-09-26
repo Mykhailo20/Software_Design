@@ -62,7 +62,7 @@ namespace LozinskyiMykhailo.RobotChallenge
 
         public bool IsAlreadyNearStation(Map map, Robot.Common.Robot robot, IList<Robot.Common.Robot> robots)
         {
-            Position nearestStation = FindNearestFreeStation(robot, map, robots, 1);
+            Position nearestStation = FindNearestFreeStation(robot, map, robots, 2);    // numberOfRobots was 1
             Position currentCellPosition = nearestStation.Copy();
             for (int i = -1; i < 2; i++)
             {
@@ -91,7 +91,7 @@ namespace LozinskyiMykhailo.RobotChallenge
                     if(!IsCellFree(currentCellPosition, robot, robots) && IsValid(currentCellPosition))
                     {
                         counter++;
-                        // If more than two robots are within the station's energy collection radius, it is invalid
+                        // If more than numberOfRobots robots are within the station's energy collection radius, it is invalid
                         if (counter >= numberOfRobots)
                         {
                             return true; 
@@ -162,47 +162,41 @@ namespace LozinskyiMykhailo.RobotChallenge
 
         public List<KeyValuePair<int, Position>> BestPositions(Map map, IList<Robot.Common.Robot> robots, Robot.Common.Robot robot)
         {
-            List<KeyValuePair<int, Position>> bestPositions = new List<KeyValuePair<int, Position>>();
-            foreach (EnergyStation station in (IEnumerable<EnergyStation>)map.Stations)
+            Dictionary<Position, int> bestPositions = new Dictionary<Position, int>();
+            foreach (EnergyStation station in map.Stations)
             {
-                Position currentCellPosition = station.Position;
                 for (int i = -1; i < 2; i++)
                 {
-                    currentCellPosition.X = station.Position.X + i;
                     for (int j = -1; j < 2; j++)
                     {
-                        currentCellPosition.Y = station.Position.Y + j;
-                        if (IsAvailablePosition(robots, currentCellPosition, Author) && 
+                        int newX = station.Position.X + i;
+                        int newY = station.Position.Y + j;
+                        Position currentCellPosition = new Position(newX, newY);
+                        if (IsAvailablePosition(robots, currentCellPosition, Author) &&
                             IsAvailablePosition(robots, currentCellPosition, "Petrushynets Erikh"))
                         {
-                            bool positionExists = bestPositions.Any(kvp => kvp.Value.Equals(currentCellPosition));
-                            if (positionExists)
+                            if (bestPositions.ContainsKey(currentCellPosition))
                             {
-                                var existingPosition = bestPositions.First(kvp => kvp.Value.Equals(currentCellPosition));
-                                int updatedEnergy = existingPosition.Key + station.Energy;
-                                bestPositions.Remove(existingPosition);
-                                bestPositions.Add(new KeyValuePair<int, Position>(updatedEnergy, currentCellPosition));
+                                bestPositions[currentCellPosition] += station.Energy;
                             }
                             else
                             {
-                                bestPositions.Add(new KeyValuePair<int, Position>(station.Energy - DistanceHelper.FindDistance(robot.Position, currentCellPosition), currentCellPosition));
+                                bestPositions[currentCellPosition] =
+                                    station.Energy - DistanceHelper.FindDistance(robot.Position, currentCellPosition);
                             }
                         }
                     }
                 }
             }
-
-            return bestPositions.OrderByDescending(kvp => kvp.Key).ToList();
+            return bestPositions
+                    .Select(kv => new KeyValuePair<int, Position>(kv.Value, kv.Key))
+                    .OrderByDescending(kvp => kvp.Key)
+                    .ToList();
         }
 
-        
         public Position FindCellToGoPosition(Robot.Common.Robot robot, Map map, IList<Robot.Common.Robot> robots, int numberOfRobots)
         {
-            /*var stationPosition = map.GetNearbyResources(robot.Position, 100).OrderBy(obj =>
-                Math.Abs(robot.Position.X - obj.Position.X) + Math.Abs(robot.Position.Y - obj.Position.Y))
-                .ToList()[0]
-                .Position;*/
-            var stationPosition = FindNearestFreeStation(robot, map, robots, numberOfRobots);   // returns null
+            var stationPosition = FindNearestFreeStation(robot, map, robots, numberOfRobots);
             var CellToGo = stationPosition.Copy();
 
             if (robot.Position.X - CellToGo.X < 0)
@@ -225,16 +219,24 @@ namespace LozinskyiMykhailo.RobotChallenge
             return CellToGo;                                                                                                                                                                                                                                                                                            
         }
        
-
         public RobotCommand DoStep(IList<Robot.Common.Robot> robots, int robotToMoveIndex, Map map)
         {
             var robot = robots[robotToMoveIndex];
-            List<KeyValuePair<int, Position>> bestPositions = BestPositions(map, robots, robot);
-            if (RoundCount >= 25)
+            if (RoundCount >= 50)
             {
-                energyToCollect = 25;
+                return new CollectEnergyCommand();
             }
-            if (RoundCount > 40)
+
+            List<KeyValuePair<int, Position>> bestPositions = BestPositions(map, robots, robot);
+            if (RoundCount >= 20)
+            {
+                energyToCollect = 40;
+            }
+            if (RoundCount >= 30)
+            {
+                energyToCollect = 30;
+            }
+            if (RoundCount >= 40)
             {
                 energyToCollect = 20;
             }
@@ -242,12 +244,11 @@ namespace LozinskyiMykhailo.RobotChallenge
             {
                 foreach (KeyValuePair<int, Position> bestPosition in bestPositions)
                 {
-
                     if (IsAvailablePosition(robots, bestPosition.Value, Author) && 
                         IsAvailablePosition(robots, bestPosition.Value, "Petrushynets Erikh") &&
                         (DistanceHelper.FindDistance(robot.Position, bestPosition.Value) + 
-                        DistanceHelper.FindDistance(robot.Position, bestPosition.Value) / 2 < bestPosition.Key) &&
-                        (robot.Energy > DistanceHelper.FindDistance(robot.Position, bestPosition.Value) + 10) &&
+                        DistanceHelper.FindDistance(robot.Position, bestPosition.Value) / 1.5 < bestPosition.Key) &&
+                        (robot.Energy > DistanceHelper.FindDistance(robot.Position, bestPosition.Value) + 20) &&
                         DistanceHelper.FindDistance(robot.Position, bestPosition.Value) <= 400 &&
                             (bestPosition.Value != robot.Position))
                         return new MoveCommand
@@ -266,7 +267,7 @@ namespace LozinskyiMykhailo.RobotChallenge
                         IsAvailablePosition(robots, bestPosition.Value, "Petrushynets Erikh") &&
                         (DistanceHelper.FindDistance(robot.Position, bestPosition.Value) +
                         DistanceHelper.FindDistance(robot.Position, bestPosition.Value) / 2 < bestPosition.Key) &&
-                        (robot.Energy > DistanceHelper.FindDistance(robot.Position, bestPosition.Value) + 10) &&
+                        (robot.Energy > DistanceHelper.FindDistance(robot.Position, bestPosition.Value) + 20) &&
                             (bestPosition.Value != robot.Position))
                         return new MoveCommand
                         {
@@ -276,8 +277,15 @@ namespace LozinskyiMykhailo.RobotChallenge
                 SmallMigrationCount += 1;
             }
 
-            if (robot.Energy > 300 && RobotCount <= 89 && RoundCount <= 45)
+            if (robot.Energy > 300 && robots.Count(rbt => rbt.OwnerName == "Lozinskyi Mykhailo") < 100 && RoundCount <= 45)
             {
+                if (robot.Energy > 500)
+                {
+                    return new CreateNewRobotCommand()
+                    {
+                        NewRobotEnergy = 200
+                    };
+                }
                 RobotCount += 1;
                 if(RobotCount == 90)
                 {
@@ -291,7 +299,7 @@ namespace LozinskyiMykhailo.RobotChallenge
             {
                 foreach (EnergyStation energyStation in nearbyResources)
                 {
-                    if (energyStation.Energy >= energyToCollect || RoundCount >= 48)
+                    if (energyStation.Energy >= energyToCollect || RoundCount >= 47) //RoundCount >= 48
                         return new CollectEnergyCommand();
                 }
             }
@@ -301,7 +309,8 @@ namespace LozinskyiMykhailo.RobotChallenge
                 foreach (var cell in bestPositions)
                 {
                     if (IsCellFree(cell.Value, robot, robots) &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) < robot.Energy &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) < cell.Key &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 10 < robot.Energy &&
                         IsAvailablePosition(robots, cell.Value, Author) &&
                         IsAvailablePosition(robots, cell.Value, "Petrushynets Erikh") &&
                         cell.Value != robot.Position)
@@ -310,8 +319,8 @@ namespace LozinskyiMykhailo.RobotChallenge
                     }
 
                     if (!IsCellFree(cell.Value, robot, robots) &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 10 < cell.Key &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 10 < robot.Energy &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value)< cell.Key &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 20 < robot.Energy &&
                         IsAvailablePosition(robots, cell.Value, Author) &&
                         IsAvailablePosition(robots, cell.Value, "Petrushynets Erikh") &&
                         cell.Value != robot.Position)
@@ -325,8 +334,8 @@ namespace LozinskyiMykhailo.RobotChallenge
                 foreach (var cell in bestPositions)
                 {
                     if (IsCellFree(cell.Value, robot, robots) &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 10 < cell.Key &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 10 <= 60 &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 20 < cell.Key &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 20 <= 90 &&
                         IsAvailablePosition(robots, cell.Value, Author) &&
                         IsAvailablePosition(robots, cell.Value, "Petrushynets Erikh") &&
                         cell.Value != robot.Position)
@@ -335,8 +344,8 @@ namespace LozinskyiMykhailo.RobotChallenge
                     }
 
                     if (!IsCellFree(cell.Value, robot, robots) &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 20 < cell.Key &&
-                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 20 <= 70 &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 40 < cell.Key &&
+                        DistanceHelper.FindDistance(robot.Position, cell.Value) + 40 <= 90 &&
                         IsAvailablePosition(robots, cell.Value, Author) &&
                         IsAvailablePosition(robots, cell.Value, "Petrushynets Erikh") &&
                         cell.Value != robot.Position)
@@ -345,31 +354,45 @@ namespace LozinskyiMykhailo.RobotChallenge
                     }
                 }
             }
-            if(IsAlreadyNearStation(map, robot, robots))
+
+            int numberOfRobots = 2;
+            Position nearestPosition = FindCellToGoPosition(robot, map, robots, numberOfRobots);
+            Position distance = new Position();
+            distance.X = robot.Position.X - nearestPosition.X;  
+            distance.Y = robot.Position.Y - nearestPosition.Y;
+
+            if (IsAlreadyNearStation(map, robot, robots))
             {
                 foreach (EnergyStation energyStation in nearbyResources)
                 {
-                    if (energyStation.Energy > 0)
+                    if (energyStation.Energy >= 0)
                     {
                         return new CollectEnergyCommand();
                     }     
                 }
             }
-            int numberOfRobots = 1;
-            // Robot is not near station
-            Position nearestPosition = FindCellToGoPosition(robot, map, robots, numberOfRobots);
-            Position distance = new Position();
-            Position positionToReturn = robot.Position;
-            distance.X = robot.Position.X - nearestPosition.X;
-            distance.Y = robot.Position.Y - nearestPosition.Y;
-            if (distance.X != 0) positionToReturn.X -= distance.X / Math.Abs(distance.X) * 2;
-            if (distance.Y != 0) positionToReturn.Y -= distance.Y / Math.Abs(distance.Y) * 2;
-            if(IsCellFree(positionToReturn, robot, robots))
+            /*else if (Math.Ceiling(distance.X / 2.0) * 4 + Math.Ceiling(distance.Y / 2.0) * 4 < robot.Energy - 20 && distance.X + distance.Y > 0)
             {
+                Position positionToReturn = robot.Position;
+                if (distance.X != 0) positionToReturn.X -= distance.X / Math.Abs(distance.X) * 2;
+                if (distance.Y != 0) positionToReturn.Y -= distance.Y / Math.Abs(distance.Y) * 2;
+                positionToReturn = FindNearestFreeCell(robot, map, robots, positionToReturn, positionToReturn);
                 return new MoveCommand() { NewPosition = positionToReturn };
             }
-            positionToReturn = FindNearestFreeCell(robot, map, robots, positionToReturn, positionToReturn);
-            return new MoveCommand() { NewPosition = positionToReturn };
+            else
+            {
+                if (distance.X == 0 && distance.Y == 0)
+                {
+                    return new MoveCommand() { NewPosition = nearestPosition };
+                }
+                Position positionToReturn = robot.Position;
+                if (distance.X != 0) positionToReturn.X -= distance.X / Math.Abs(distance.X);
+                if (distance.Y != 0) positionToReturn.Y -= distance.Y / Math.Abs(distance.Y);
+                positionToReturn = FindNearestFreeCell(robot, map, robots, positionToReturn, positionToReturn);
+                return new MoveCommand() { NewPosition = positionToReturn };
+            }*/
+
+            return new CollectEnergyCommand();
         }
 
         public string Author { 

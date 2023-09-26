@@ -14,15 +14,17 @@ namespace LozinskyiMykhailo.RobotChallenge.Test
         {
             var algorithm = new LozinskyiMykhailoAlgorithm();
             var map = new Map();
-            Position stationPosition = new Position(1, 1);
-            map.Stations.Add(new EnergyStation() { Energy = 1000, Position = stationPosition, RecoveryRate = 2 });
+            map.Stations.Add(new EnergyStation() { Energy = 1000, Position = new Position(1, 1), RecoveryRate = 2 });
+
+            Position expectedPosition = new Position(2, 2);
+
             var robots = new List<Robot.Common.Robot>() { 
                                                     new Robot.Common.Robot(){ Energy = 200, Position = new Position(2, 3)} 
                                                 };
             var command = algorithm.DoStep(robots, 0, map);
 
             Assert.IsTrue(command is MoveCommand);
-            Assert.AreEqual(((MoveCommand)command).NewPosition, stationPosition);
+            Assert.AreEqual(((MoveCommand)command).NewPosition, expectedPosition);
         }
 
         [TestMethod]
@@ -55,7 +57,7 @@ namespace LozinskyiMykhailo.RobotChallenge.Test
             var command = algorithm.DoStep(robots, 0, map);
 
             Assert.IsTrue(command is CreateNewRobotCommand);
-            Assert.AreEqual(((CreateNewRobotCommand)command).NewRobotEnergy, 100);
+            Assert.AreEqual(((CreateNewRobotCommand)command).NewRobotEnergy, 200);
         }
 
         [TestMethod]
@@ -63,22 +65,23 @@ namespace LozinskyiMykhailo.RobotChallenge.Test
         {
             var algorithm = new LozinskyiMykhailoAlgorithm();
             var map = new Map();
-            Position stationPosition = new Position(1, 1);
-            map.Stations.Add(new EnergyStation() { Energy = 1000, Position = stationPosition, RecoveryRate = 2 });
+            map.Stations.Add(new EnergyStation() { Energy = 1000, Position = new Position(1, 1), RecoveryRate = 2 });
             map.Stations.Add(new EnergyStation() { Energy = 1500, Position = new Position(10, 10), RecoveryRate = 2 });
+
+            Position expectedPosition = new Position(2, 2);
 
             var robots = new List<Robot.Common.Robot>() {
                                                     new Robot.Common.Robot(){ Energy = 1550, Position = new Position(2, 3)}
                                                 };
-            algorithm.RoundCount = 20;
+            algorithm.RoundCount = 10;
             var command = algorithm.DoStep(robots, 0, map);
             Assert.IsTrue(command is CreateNewRobotCommand);
-            Assert.AreEqual(((CreateNewRobotCommand)command).NewRobotEnergy, 100);
+            Assert.AreEqual(((CreateNewRobotCommand)command).NewRobotEnergy, 200);
 
             algorithm.RoundCount = 46;
             var newCommand = algorithm.DoStep(robots, 0, map);
             Assert.IsTrue(newCommand is MoveCommand);
-            Assert.AreEqual(((MoveCommand)newCommand).NewPosition, stationPosition);
+            Assert.AreEqual(((MoveCommand)newCommand).NewPosition, expectedPosition);
         }
 
         [TestMethod]
