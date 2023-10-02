@@ -228,11 +228,11 @@ namespace LozinskyiMykhailo.RobotChallenge
             }
 
             List<KeyValuePair<int, Position>> optimalPositions = FindOptimalPositions(map, robots, robot);
-            if (RoundCount >= 20)
+            if (RoundCount == 20)
             {
                 energyToCollect = 40;
             }
-            if (RoundCount >= 30)
+            if (RoundCount == 30)
             {
                 energyToCollect = 30;
             }
@@ -280,7 +280,7 @@ namespace LozinskyiMykhailo.RobotChallenge
             if (robot.Energy > 300 && robots.Count(rbt => rbt.OwnerName == "Lozinskyi Mykhailo") < 100 && RoundCount <= 45)
             {
                 RobotCount += 1;
-                if (RobotCount == 90)
+                if ((RobotCount == 90) && (RoundCount < 40))
                 {
                     energyToCollect = 25;
                 }
