@@ -1,8 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Robot.Common;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace LozinskyiMykhailo.RobotChallenge.Test
 {
@@ -49,7 +47,7 @@ namespace LozinskyiMykhailo.RobotChallenge.Test
             var map = new Map();
             Position stationPosition = new Position(1, 1);
             map.Stations.Add(new EnergyStation() { Energy = 1000, Position = stationPosition, RecoveryRate = 2 });
-            map.Stations.Add(new EnergyStation() { Energy = 1500, Position = stationPosition, RecoveryRate = 2 });
+            map.Stations.Add(new EnergyStation() { Energy = 1500, Position = new Position(10, 10), RecoveryRate = 2 });
 
             var robots = new List<Robot.Common.Robot>() {
                                                     new Robot.Common.Robot(){ Energy = 550, Position = new Position(2, 3)}
@@ -141,10 +139,6 @@ namespace LozinskyiMykhailo.RobotChallenge.Test
                                                     new Robot.Common.Robot(){ Energy = 200, Position = new Position(0, 0) },
                                                     new Robot.Common.Robot(){ Energy = 200, Position = new Position(5, 5) },
             };
-            foreach (var robot in robots)
-            {
-                robot.OwnerName = algorithm.Author;
-            }
 
             bool isFirstRobotNearStation = algorithm.IsAlreadyNearStation(map, robots[0], robots);
             Assert.IsTrue(isFirstRobotNearStation);

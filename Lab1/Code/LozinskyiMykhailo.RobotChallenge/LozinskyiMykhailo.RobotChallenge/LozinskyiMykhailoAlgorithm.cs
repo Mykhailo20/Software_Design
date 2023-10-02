@@ -1,11 +1,7 @@
 ﻿ using Robot.Common;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LozinskyiMykhailo.RobotChallenge
 {
@@ -108,7 +104,7 @@ namespace LozinskyiMykhailo.RobotChallenge
             int minDistance = int.MaxValue;
             foreach (var station in map.Stations)
             {
-                if (!IsStationSurrounded(station.Position, movingRobot, robots, numberOfRobots) && (station.Energy > 75) && (station.Position != movingRobot.Position))
+                if (!IsStationSurrounded(station.Position, movingRobot, robots, numberOfRobots) && (station.Energy > energyToCollect) && (station.Position != movingRobot.Position))
                 {
                     int d = DistanceHelper.FindDistance(station.Position, movingRobot.Position);
                     if (d < minDistance)

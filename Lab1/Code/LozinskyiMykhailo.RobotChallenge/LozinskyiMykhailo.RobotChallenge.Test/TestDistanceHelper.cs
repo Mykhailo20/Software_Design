@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Robot.Common;
-using System;
 
 namespace LozinskyiMykhailo.RobotChallenge.Test
 {
