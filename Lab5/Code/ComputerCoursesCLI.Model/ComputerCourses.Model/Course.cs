@@ -1,6 +1,11 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ComputerCoursesSystem.Model
+namespace ComputerCoursesCLI.Model
 {
     [DataContract]
     public class Course
