@@ -11,5 +11,7 @@
                   Height="256" Margin="0,0,0,0" VerticalAlignment="Top" Width="Auto" 
                   Name="dataGridTeachers"
                   ItemsSource="{Binding Path=Teachers}"/>
+        <Button Content="Lecture Based" HorizontalAlignment="Left" Height="33" Margin="10,275,0,0" VerticalAlignment="Top" Width="104"
+                Name="buttonLectureBased" Click="buttonLectureBased_Click"/>
     </Grid>
 </Window>

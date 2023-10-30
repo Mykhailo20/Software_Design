@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComputerCoursesSystem.UI.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,12 @@ namespace ComputerCoursesSystem.UI
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void buttonLectureBased_Click(object sender, RoutedEventArgs e)
+        {
+            var teacher = (TeacherViewModel)dataGridTeachers.SelectedItem;
+            teacher.Style = Model.TeachingStyle.LectureBased;
         }
     }
 }

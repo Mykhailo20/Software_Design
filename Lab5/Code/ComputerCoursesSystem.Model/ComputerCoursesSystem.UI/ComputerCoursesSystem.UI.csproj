@@ -11,4 +11,10 @@
     <ProjectReference Include="..\ComputerCoursesSystem.Model\ComputerCoursesSystem.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\ThirdParty\AutoMapper.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
