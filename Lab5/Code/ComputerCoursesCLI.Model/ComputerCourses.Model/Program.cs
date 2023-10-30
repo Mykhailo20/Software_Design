@@ -38,7 +38,7 @@ namespace ComputerCoursesCLI.Model
                 PassingScore = 100.00f, Description=String.Empty}
             };
 
-            String filename = "Files\\organizer.src";
+            String filename = "organizer.src";
             DataSerializer.SerializeData(filename, dataModel);
             Console.WriteLine("dataModel was successfully serialized!");
 

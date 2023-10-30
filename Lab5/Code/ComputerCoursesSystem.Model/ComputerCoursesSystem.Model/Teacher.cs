@@ -18,7 +18,7 @@ namespace ComputerCoursesSystem.Model
         public string PhoneNumber { get; set; } = string.Empty;
 
         [DataMember]
-        public TeachingStyle Style { get; set; }
+        public TeachingStyle style { get; set; }
     }
 
     [DataContract]

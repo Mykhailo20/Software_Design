@@ -15,7 +15,7 @@ namespace ComputerCoursesSystem.Model
         [DataMember]
         public IEnumerable<Assignment> Assignments { get; set; } = new List<Assignment>();
 
-        private static readonly string dataFile = "data.src";
+        private static readonly string dataFile = "data.dat";
 
         public static DataModel Load()
         {
