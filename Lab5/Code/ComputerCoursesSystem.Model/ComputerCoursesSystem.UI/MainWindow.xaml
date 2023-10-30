@@ -9,7 +9,7 @@
     <Grid>
         <DataGrid AutoGenerateColumns="True" HorizontalAlignment="Left" 
                   Height="256" Margin="0,0,0,0" VerticalAlignment="Top" Width="Auto" 
-                  Name="dataGrid1"
+                  Name="dataGridTeachers"
                   ItemsSource="{Binding Path=Teachers}"/>
     </Grid>
 </Window>
