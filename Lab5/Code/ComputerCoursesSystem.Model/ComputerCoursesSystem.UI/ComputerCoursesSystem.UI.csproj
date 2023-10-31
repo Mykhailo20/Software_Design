@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Buttons\Assignment.png" />
+    <None Remove="Images\Buttons\Course.png" />
+    <None Remove="Images\Buttons\Teacher.png" />
     <None Remove="Images\TeacherStyle\LectureBased.png" />
     <None Remove="Images\TeacherStyle\Mentorship.png" />
     <None Remove="Images\TeacherStyle\ProblemSolving.png" />
@@ -15,6 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Images\Buttons\Assignment.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Buttons\Course.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Buttons\Teacher.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\TeacherStyle\LectureBased.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

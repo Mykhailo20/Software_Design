@@ -11,6 +11,20 @@ namespace ComputerCoursesSystem.UI.ViewModels
 {
     public class DataViewModel: ViewModelBase
     {
+        private string _visibleControl = "Teachers";
+        public string VisibleControl
+        {
+            get
+            {
+                return _visibleControl;
+            }
+            set
+            {
+                _visibleControl = value;
+                OnPropertyChanged("VisibleControl");
+            }
+        }
+
         private ObservableCollection<TeacherViewModel> _teachers;
         public ObservableCollection<TeacherViewModel> Teachers {
             get 

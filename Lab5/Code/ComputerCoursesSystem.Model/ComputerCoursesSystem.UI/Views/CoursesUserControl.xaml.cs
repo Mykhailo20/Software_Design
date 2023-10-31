@@ -1,5 +1,4 @@
-﻿using ComputerCoursesSystem.UI.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,22 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ComputerCoursesSystem.UI
+namespace ComputerCoursesSystem.UI.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for CoursesUserControl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class CoursesUserControl : UserControl
     {
-        public MainWindow()
+        public CoursesUserControl()
         {
             InitializeComponent();
-        }
-
-        private void buttonLectureBased_Click(object sender, RoutedEventArgs e)
-        {
-            var teacher = (TeacherViewModel)dataGridTeachers.SelectedItem;
-            teacher.Style = Model.TeachingStyle.LectureBased;
         }
     }
 }
