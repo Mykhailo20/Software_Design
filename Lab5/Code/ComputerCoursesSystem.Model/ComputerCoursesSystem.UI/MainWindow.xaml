@@ -24,7 +24,8 @@
                         <DataTemplate>
                             <Image Width="48" Height="48" 
                                    Source="{Binding Style, 
-                                   Converter={StaticResource my:ImagePathConverter}
+                                   Converter={StaticResource my:ImagePathConverter},
+                                   ConverterParameter=TeacherStyle
                                 }"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

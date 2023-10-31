@@ -8,23 +8,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Images\TeacherStyle\LectureBased_Style.png" />
-    <None Remove="Images\TeacherStyle\Mentorship_Style.png" />
-    <None Remove="Images\TeacherStyle\ProblemSolving_Style.png" />
-    <None Remove="Images\TeacherStyle\ProjectBased_Style.png" />
+    <None Remove="Images\TeacherStyle\LectureBased.png" />
+    <None Remove="Images\TeacherStyle\Mentorship.png" />
+    <None Remove="Images\TeacherStyle\ProblemSolving.png" />
+    <None Remove="Images\TeacherStyle\ProjectBased.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Images\TeacherStyle\LectureBased_Style.png">
+    <Content Include="Images\TeacherStyle\LectureBased.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\TeacherStyle\Mentorship_Style.png">
+    <Content Include="Images\TeacherStyle\Mentorship.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\TeacherStyle\ProblemSolving_Style.png">
+    <Content Include="Images\TeacherStyle\ProblemSolving.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\TeacherStyle\ProjectBased_Style.png">
+    <Content Include="Images\TeacherStyle\ProjectBased.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
