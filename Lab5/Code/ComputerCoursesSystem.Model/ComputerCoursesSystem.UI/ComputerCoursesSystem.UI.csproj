@@ -8,6 +8,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\TeacherStyle\LectureBased_Style.png" />
+    <None Remove="Images\TeacherStyle\Mentorship_Style.png" />
+    <None Remove="Images\TeacherStyle\ProblemSolving_Style.png" />
+    <None Remove="Images\TeacherStyle\ProjectBased_Style.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\TeacherStyle\LectureBased_Style.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\TeacherStyle\Mentorship_Style.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\TeacherStyle\ProblemSolving_Style.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\TeacherStyle\ProjectBased_Style.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ComputerCoursesSystem.Model\ComputerCoursesSystem.Model.csproj" />
   </ItemGroup>
 

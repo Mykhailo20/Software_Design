@@ -3,14 +3,34 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ComputerCoursesSystem.UI"
+        xmlns:local="clr-namespace:ComputerCoursesSystem.UI" xmlns:Converter="clr-namespace:ComputerCoursesSystem.UI.Convertors"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Converter:ImagePathConverter x:Key="my:ImagePathConverter"/>
+    </Window.Resources>
     <Grid>
-        <DataGrid AutoGenerateColumns="True" HorizontalAlignment="Left" 
+        <DataGrid AutoGenerateColumns="False" HorizontalAlignment="Left" 
                   Height="256" Margin="0,0,0,0" VerticalAlignment="Top" Width="Auto" 
                   Name="dataGridTeachers"
-                  ItemsSource="{Binding Path=Teachers}"/>
+                  ItemsSource="{Binding Path=Teachers}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="FirstName" Binding="{Binding Path=FirstName, Mode=TwoWay}"/>
+                <DataGridTextColumn Header="LastName" Binding="{Binding Path=LastName, Mode=TwoWay}"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding Path=Email, Mode=TwoWay}"/>
+                <DataGridTextColumn Header="PhoneNumber" Binding="{Binding Path=PhoneNumber, Mode=TwoWay}"/>
+                <DataGridTemplateColumn Header="Style">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Width="48" Height="48" 
+                                   Source="{Binding Style, 
+                                   Converter={StaticResource my:ImagePathConverter}
+                                }"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
         <Button Content="Lecture Based" HorizontalAlignment="Left" Height="33" Margin="10,275,0,0" VerticalAlignment="Top" Width="104"
                 Name="buttonLectureBased" Click="buttonLectureBased_Click"/>
     </Grid>

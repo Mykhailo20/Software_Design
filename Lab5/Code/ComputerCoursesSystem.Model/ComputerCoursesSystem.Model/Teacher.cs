@@ -31,9 +31,6 @@ namespace ComputerCoursesSystem.Model
         LectureBased,
 
         [EnumMember]
-        Facilitator,
-
-        [EnumMember]
         ProjectBased,
 
         [EnumMember]
