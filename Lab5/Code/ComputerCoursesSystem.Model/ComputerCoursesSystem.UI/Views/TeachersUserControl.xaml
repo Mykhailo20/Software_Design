@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ComputerCoursesSystem.UI.Views" xmlns:Converter="clr-namespace:ComputerCoursesSystem.UI.Convertors"
+             xmlns:local="clr-namespace:ComputerCoursesSystem.UI.Views" 
+             xmlns:Converter="clr-namespace:ComputerCoursesSystem.UI.Convertors" 
+             xmlns:viewmodels="clr-namespace:ComputerCoursesSystem.UI.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:ViewModelBase}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -14,7 +17,9 @@
         <DataGrid AutoGenerateColumns="False" HorizontalAlignment="Left" 
           Height="256" Margin="0,0,0,0" VerticalAlignment="Top" Width="Auto" 
           Name="dataGridTeachers"
-          ItemsSource="{Binding Path=Teachers}">
+          ItemsSource="{Binding Path=Teachers}"
+          SelectedItem="{Binding Path=SelectedTeacher, Mode=TwoWay}"        
+        >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="FirstName" Binding="{Binding Path=FirstName, Mode=TwoWay}"/>
                 <DataGridTextColumn Header="LastName" Binding="{Binding Path=LastName, Mode=TwoWay}"/>
@@ -35,5 +40,8 @@
         </DataGrid>
         <Button Content="Lecture Based" HorizontalAlignment="Left" Height="33" Margin="10,275,0,0" VerticalAlignment="Top" Width="104"
         Name="buttonLectureBased" Click="buttonLectureBased_Click"/>
+        <Button Content="Set Lecture Based" HorizontalAlignment="Left" Height="33" Margin="120,275,0,0" 
+                VerticalAlignment="Top" Width="104"
+                Name="buttonChangeToLectureBased" Command="{Binding Path=LectureBasedCommand}"></Button>
     </Grid>
 </UserControl>

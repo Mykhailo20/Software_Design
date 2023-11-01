@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComputerCoursesSystem.UI.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -25,5 +26,11 @@ namespace ComputerCoursesSystem.UI.ViewModels
             }
         }
 
+        private Command lectureBasedCommand;
+        public ICommand LectureBasedCommand => lectureBasedCommand ??= new Command(LectureBased);
+
+        private void LectureBased(object commandParameter)
+        {
+        }
     }
 }

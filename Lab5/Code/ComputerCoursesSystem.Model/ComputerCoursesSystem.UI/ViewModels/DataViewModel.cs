@@ -16,6 +16,7 @@ namespace ComputerCoursesSystem.UI.ViewModels
         public DataViewModel()
         {
             SetControlVisibility = new Command(ControlVisibility);
+            LectureBasedCommand = new Command(ChangeToLectureBased);
         }
         private string _visibleControl = "Teachers";
         public string VisibleControl
@@ -49,6 +50,26 @@ namespace ComputerCoursesSystem.UI.ViewModels
                 _teachers = value;
                 OnPropertyChanged("Teachers");
             }
+        }
+
+        private TeacherViewModel _selectedTeacher;
+        public TeacherViewModel SelectedTeacher
+        {
+            get { 
+                return _selectedTeacher; 
+            }
+            set
+            {
+                _selectedTeacher = value;
+                OnPropertyChanged("SelectedTeacher");
+            }
+        }
+
+        public ICommand LectureBasedCommand { get; set; }
+
+        public void ChangeToLectureBased(object args)
+        {
+            SelectedTeacher.Style = TeachingStyle.LectureBased;
         }
 
         private ObservableCollection<CourseViewModel> _courses;
