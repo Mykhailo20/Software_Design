@@ -6,11 +6,17 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ComputerCoursesSystem.UI.ViewModels
 {
     public class DataViewModel: ViewModelBase
     {
+
+        public DataViewModel()
+        {
+            SetControlVisibility = new Command(ControlVisibility);
+        }
         private string _visibleControl = "Teachers";
         public string VisibleControl
         {
@@ -23,6 +29,13 @@ namespace ComputerCoursesSystem.UI.ViewModels
                 _visibleControl = value;
                 OnPropertyChanged("VisibleControl");
             }
+        }
+
+        public ICommand SetControlVisibility{ get; set; }
+
+        public void ControlVisibility(object args)
+        {
+            VisibleControl = args.ToString();
         }
 
         private ObservableCollection<TeacherViewModel> _teachers;
