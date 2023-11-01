@@ -25,10 +25,10 @@ namespace ComputerCoursesSystem.UI.Views
         {
             InitializeComponent();
         }
-        private void buttonLectureBased_Click(object sender, RoutedEventArgs e)
+        /*private void buttonLectureBased_Click(object sender, RoutedEventArgs e)
         {
             var teacher = (TeacherViewModel)dataGridTeachers.SelectedItem;
             teacher.Style = Model.TeachingStyle.LectureBased;
-        }
+        }*/
     }
 }

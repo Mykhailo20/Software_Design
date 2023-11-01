@@ -15,7 +15,7 @@
         
     <Grid>
         <DataGrid AutoGenerateColumns="False" HorizontalAlignment="Left" 
-          Height="256" Margin="0,0,0,0" VerticalAlignment="Top" Width="Auto" 
+          Height="256" Margin="10,0,0,0" VerticalAlignment="Top" Width="Auto" 
           Name="dataGridTeachers"
           ItemsSource="{Binding Path=Teachers}"
           SelectedItem="{Binding Path=SelectedTeacher, Mode=TwoWay}"        
@@ -38,9 +38,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="Lecture Based" HorizontalAlignment="Left" Height="33" Margin="10,275,0,0" VerticalAlignment="Top" Width="104"
-        Name="buttonLectureBased" Click="buttonLectureBased_Click"/>
-        <Button Content="Set Lecture Based" HorizontalAlignment="Left" Height="33" Margin="120,275,0,0" 
+        <Button Content="Set Lecture Based" HorizontalAlignment="Left" Height="33" Margin="10,275,0,0" 
                 VerticalAlignment="Top" Width="104"
                 Name="buttonChangeToLectureBased" Command="{Binding Path=LectureBasedCommand}"></Button>
     </Grid>
