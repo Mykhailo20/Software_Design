@@ -25,12 +25,5 @@ namespace ComputerCoursesSystem.UI.ViewModels
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
-        private Command lectureBasedCommand;
-        public ICommand LectureBasedCommand => lectureBasedCommand ??= new Command(LectureBased);
-
-        private void LectureBased(object commandParameter)
-        {
-        }
     }
 }

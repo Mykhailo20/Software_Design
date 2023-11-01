@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ComputerCoursesSystem.UI.ViewModels
@@ -16,7 +17,7 @@ namespace ComputerCoursesSystem.UI.ViewModels
         public DataViewModel()
         {
             SetControlVisibility = new Command(ControlVisibility);
-            LectureBasedCommand = new Command(ChangeToLectureBased);
+            TeachingStyleCommand = new Command(ChangeTeachingStyle);
         }
         private string _visibleControl = "Teachers";
         public string VisibleControl
@@ -65,11 +66,17 @@ namespace ComputerCoursesSystem.UI.ViewModels
             }
         }
 
-        public ICommand LectureBasedCommand { get; set; }
+        public ICommand TeachingStyleCommand { get; set; }
 
-        public void ChangeToLectureBased(object args)
+        public void ChangeTeachingStyle(object args)
         {
-            SelectedTeacher.Style = TeachingStyle.LectureBased;
+            if (args is string styleString) // Check if args is a string
+            {
+                if (Enum.TryParse<TeachingStyle>(styleString, out TeachingStyle style))
+                {
+                    SelectedTeacher.Style = style;
+                }
+            }
         }
 
         private ObservableCollection<CourseViewModel> _courses;

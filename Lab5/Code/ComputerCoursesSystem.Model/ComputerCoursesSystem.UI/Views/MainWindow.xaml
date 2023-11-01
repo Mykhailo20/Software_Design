@@ -7,7 +7,8 @@
         xmlns:viewmodels="clr-namespace:ComputerCoursesSystem.UI.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:DataViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="700"
+        ResizeMode="NoResize">
     <Window.Resources>
         <Convertors:ControlVisibility x:Key="my:ControlVisibility"/>
     </Window.Resources>
