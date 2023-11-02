@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -24,12 +25,25 @@ namespace ComputerCoursesSystem.UI
         public MainWindow()
         {
             InitializeComponent();
-        }
 
-        /*private void buttonLectureBased_Click(object sender, RoutedEventArgs e)
-        {
-            var teacher = (TeacherViewModel)dataGridTeachers.SelectedItem;
-            teacher.Style = Model.TeachingStyle.LectureBased;
-        }*/
+            DoubleAnimation buttonImageAnimationTeacher = new DoubleAnimation()
+            {
+                From = teachersImage.ActualWidth, To = 100, Duration = TimeSpan.FromSeconds(3)
+            };
+            teachersImage.BeginAnimation(WidthProperty, buttonImageAnimationTeacher);
+
+            DoubleAnimation buttonImageAnimationCourse = new DoubleAnimation() { 
+                From = coursesImage.ActualWidth, To = 100, Duration = TimeSpan.FromSeconds(3)
+            };
+            coursesImage.BeginAnimation(WidthProperty, buttonImageAnimationCourse);
+
+            DoubleAnimation buttonImageAnimationAssignment = new DoubleAnimation()
+            {
+                From = assignmentsImage.ActualWidth,
+                To = 100,
+                Duration = TimeSpan.FromSeconds(3)
+            };
+            assignmentsImage.BeginAnimation(WidthProperty, buttonImageAnimationAssignment);
+        }
     }
 }

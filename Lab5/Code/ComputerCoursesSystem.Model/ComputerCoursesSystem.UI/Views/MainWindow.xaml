@@ -20,15 +20,15 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
             <Button  Margin="10" Command="{Binding SetControlVisibility}" CommandParameter="Teachers">
-                <Image Source="..\Images\Buttons\Teacher.png" Width="100" Height="100"/>
+                <Image Name="teachersImage" Source="..\Images\Buttons\Teacher.png" Width="100" Height="100"/>
             </Button>
 
             <Button Margin="10" Command="{Binding SetControlVisibility}" CommandParameter="Courses">
-                <Image Source="..\Images\Buttons\Course.png" Width="100" Height="100"/>
+                <Image Name="coursesImage" Source="..\Images\Buttons\Course.png" Width="100" Height="100"/>
             </Button>
 
             <Button Margin="10" Command="{Binding SetControlVisibility}" CommandParameter="Assignments">
-                <Image Source="..\Images\Buttons\Assignment.png" Width="100" Height="100"/>
+                <Image Name="assignmentsImage" Source="..\Images\Buttons\Assignment.png" Width="100" Height="100"/>
             </Button>
         </StackPanel>
 
