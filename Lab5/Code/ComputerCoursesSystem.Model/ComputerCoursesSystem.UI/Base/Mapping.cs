@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
 using ComputerCoursesSystem.Model;
 using ComputerCoursesSystem.UI.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace ComputerCoursesSystem.UI.Base
 {
     public class Mapping
