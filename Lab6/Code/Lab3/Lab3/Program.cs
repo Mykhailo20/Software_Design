@@ -48,11 +48,32 @@ namespace Lab3
             }
         }
 
+        private static int GetUserChoice(string choiceString)
+        {
+            while (true)
+            {
+                Console.WriteLine(choiceString);
+                Console.Write("Your choice: ");
+                try
+                {
+                    return int.Parse(Console.ReadLine());
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Invalid input. Please enter a number.\n".ToUpper());
+                }
+            }
+        }
+
         private static void ShowPersons(ComputerCoursesDbContext db)
         {
             Console.WriteLine();
             var persons = db.Persons.ToList();
-
+            if(persons.Count == 0)
+            {
+                Console.WriteLine("The \"Skills\" table does not contain any records.\n");
+                return;
+            }
             int maxFirstNameLength = persons.Max(p => p.FirstName.Length);
             int maxLastNameLength = persons.Max(p => p.LastName.Length);
 
@@ -124,7 +145,7 @@ namespace Lab3
             // Add the new person to the context and save changes
             db.Persons.Add(newPerson);
             db.SaveChanges();
-            Console.WriteLine("\nNew record in table \"person\" was successfully added!\n");
+            Console.WriteLine("A new record was successfully added to the \"person\" table!\n");
         }
 
         // Helper method to hash the password using SHA-256
@@ -169,6 +190,10 @@ namespace Lab3
                         Console.WriteLine($"\nThe record with person Id = {updatePersonId} was successfully updated!\n");
                     }
                 }
+                else
+                {
+                    Console.WriteLine($"\nThe record with person Id = {updatePersonId} not found.\n");
+                }
             }
             else
             {
@@ -190,7 +215,7 @@ namespace Lab3
                 }
                 else
                 {
-                    Console.WriteLine("\nThe record with person Id = {deletePersonId} not found.\n");
+                    Console.WriteLine($"\nThe record with person Id = {deletePersonId} not found.\n");
                 }
             }
             else
@@ -198,24 +223,6 @@ namespace Lab3
                 Console.Write("Invalid input for person Id. Please enter a positive integer.".ToUpper());
             }  
         }
-
-        private static int GetUserChoice(string choiceString)
-        {
-            while (true)
-            {
-                Console.WriteLine(choiceString);
-                Console.Write("Your choice: ");
-                try
-                {
-                    return int.Parse(Console.ReadLine());
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Invalid input. Please enter a number.\n".ToUpper());
-                }
-            }
-        }
-
     }
 }
 
