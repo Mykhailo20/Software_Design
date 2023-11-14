@@ -16,7 +16,7 @@ namespace Lab3
         {
             using(var db = new ComputerCoursesDbContext())
             {
-                UpdatePerson(db);
+                DeletePerson(db);
                 ShowPersons(db);
             }
         }
@@ -85,8 +85,25 @@ namespace Lab3
                 if (updated)
                 {
                     personToUpdate.Email = $"{personToUpdate.FirstName.ToLower()}.{personToUpdate.LastName.ToLower()}@gmail.com";
-                    Console.WriteLine($"\nThe record with person_id = {updatePersonId} was successfully updated\n");
+                    db.SaveChanges();
+                    Console.WriteLine($"\nThe record with person_id = {updatePersonId} was successfully updated!\n");
                 }
+            }
+        }
+
+        private static void DeletePerson(ComputerCoursesDbContext db)
+        {
+            int deletePersonId = 32;
+            var personToDelete = db.Persons.FirstOrDefault(person => person.PersonId == deletePersonId);
+            if (personToDelete != null)
+            {
+                db.Persons.Remove(personToDelete);
+                db.SaveChanges();
+                Console.WriteLine($"\nThe record with person_id = {deletePersonId} was successfully deleted!\n");
+            }
+            else
+            {
+                Console.WriteLine("\nThe record with person_id = {deletePersonId} not found.\n");
             }
         }
     }
