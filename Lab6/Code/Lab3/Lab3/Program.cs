@@ -1,4 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Lab3.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,15 @@ namespace Lab3
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            using(var db = new ComputerCoursesDbContext())
+            {
+                var persons = db.Persons.ToList();
+                foreach (var person in persons)
+                {
+                    Console.WriteLine($"{person.PersonId} {person.FirstName} {person.LastName} {person.Email}");
+                }
+
+            }
         }
     }
 }

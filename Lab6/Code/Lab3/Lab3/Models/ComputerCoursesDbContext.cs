@@ -31,7 +31,7 @@ public partial class ComputerCoursesDbContext : DbContext
 
     public virtual DbSet<Material> Materials { get; set; }
 
-    public virtual DbSet<Person> People { get; set; }
+    public virtual DbSet<Person> Persons { get; set; }
 
     public virtual DbSet<Rating> Ratings { get; set; }
 
