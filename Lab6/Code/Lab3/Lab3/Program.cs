@@ -2,6 +2,7 @@
 using Lab3.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,7 +16,7 @@ namespace Lab3
         {
             using(var db = new ComputerCoursesDbContext())
             {
-                InsertPerson(db);
+                UpdatePerson(db);
                 ShowPersons(db);
             }
         }
@@ -56,6 +57,36 @@ namespace Lab3
             {
                 byte[] hashedBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            }
+        }
+
+        private static void UpdatePerson(ComputerCoursesDbContext db)
+        {
+            int updatePersonId = 32;
+            var personToUpdate = db.Persons.FirstOrDefault(person => person.PersonId == updatePersonId);
+            if (personToUpdate != null) {
+                Console.Write("Enter Person New First Name: ");
+                bool updated = false;
+                string newFName = Console.ReadLine();
+                if((newFName != null) && (newFName != ""))
+                {
+                    personToUpdate.FirstName = newFName;
+                    updated = true;
+                }
+
+                Console.Write("Enter New Person New Last Name: ");
+                string newLName = Console.ReadLine();
+                if ((newLName != null) && (newLName != ""))
+                {
+                    personToUpdate.LastName = newLName;
+                    updated = true;
+                }
+
+                if (updated)
+                {
+                    personToUpdate.Email = $"{personToUpdate.FirstName.ToLower()}.{personToUpdate.LastName.ToLower()}@gmail.com";
+                    Console.WriteLine($"\nThe record with person_id = {updatePersonId} was successfully updated\n");
+                }
             }
         }
     }
