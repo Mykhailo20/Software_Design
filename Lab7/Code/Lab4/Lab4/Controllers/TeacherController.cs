@@ -6,12 +6,23 @@ namespace Lab4.Controllers
     [Route("api/[controller]")]
     public class TeacherController: ControllerBase
     {
-        public static Teacher teacher = new Teacher();
-
-        [HttpGet]
-        public ActionResult<Teacher> Get()
+        public static List<Teacher> teachers = new List<Teacher>
         {
-            return Ok(teacher);
+            new Teacher(),
+            new Teacher{ FirstName = "Ivan", LastName = "Ivanov", MiddleName = "Ivanovich", 
+                BirthDate = new DateOnly(1985, 07, 12), Style = TeachingStyle.Mentorship}
+        };
+
+        [HttpGet("GetAll")]
+        public ActionResult<List<Teacher>> GetAll()
+        {
+            return Ok(teachers);
+        }
+
+        [HttpGet("GetSingle")]
+        public ActionResult<Teacher> GetSingle()
+        {
+            return Ok(teachers[0]);
         }
     }
 }
