@@ -10,11 +10,13 @@ namespace Lab4.Controllers
         public static List<Skill> skills = new List<Skill>
         {
             new Skill { 
+                SkillId = 0,
                 Name = "Data Cleaning",
                 Level = 5,
                 Description = "Clean the data from missing values and anomalies"
             },
              new Skill { 
+                 SkillId = 1,
                  Name = "Data Preparation",
                  Level = 7,
                  Description = "Transform the data into a form that will be used to train the ML model"
@@ -27,10 +29,10 @@ namespace Lab4.Controllers
             return Ok(skills);
         }
 
-        [HttpGet("GetSingle")]
-        public ActionResult<Skill> GetSingle()
+        [HttpGet("GetSingle{id}")]
+        public ActionResult<Skill> GetSingle(int id)
         {
-            return Ok(skills[0]);
+            return Ok(skills.FirstOrDefault(s => s.SkillId == id));
         }
     }
 }
