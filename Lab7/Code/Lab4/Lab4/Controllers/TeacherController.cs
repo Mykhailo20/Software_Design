@@ -24,5 +24,12 @@ namespace Lab4.Controllers
         {
             return Ok(teachers.FirstOrDefault(t => t.TeacherId == id));
         }
+
+        [HttpPost]
+        public ActionResult<List<Teacher>> AddTeacher(Teacher newTeacher)
+        {
+            teachers.Add(newTeacher);
+            return Ok(teachers);
+        }
     }
 }

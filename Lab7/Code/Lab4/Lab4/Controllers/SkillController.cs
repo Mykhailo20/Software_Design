@@ -34,5 +34,12 @@ namespace Lab4.Controllers
         {
             return Ok(skills.FirstOrDefault(s => s.SkillId == id));
         }
+
+        [HttpPost]
+        public ActionResult<List<Skill>> AddSkill(Skill newSkill)
+        {
+            skills.Add(newSkill);
+            return Ok(skills);
+        }
     }
 }
