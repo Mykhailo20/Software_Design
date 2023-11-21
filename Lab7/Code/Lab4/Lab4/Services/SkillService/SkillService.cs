@@ -21,16 +21,19 @@ namespace Lab4.Services.SkillService
         };
 
         private readonly IMapper _mapper;
+        private readonly DataContext _dataContext;
 
-        public SkillService(IMapper mapper)
+        public SkillService(IMapper mapper, DataContext dataContext)
         {
             _mapper = mapper;
+            _dataContext = dataContext;
         }
 
         public async Task<ServiceResponse<List<GetSkillDto>>> GetAllSkills()
         {
             var serviceResponse = new ServiceResponse<List<GetSkillDto>>();
-            serviceResponse.Data = skills.Select(s => _mapper.Map<GetSkillDto>(s)).ToList();
+            var dbSkills = await _dataContext.Skills.ToListAsync();
+            serviceResponse.Data = dbSkills.Select(s => _mapper.Map<GetSkillDto>(s)).ToList();
             return serviceResponse;
         }
 
@@ -39,12 +42,12 @@ namespace Lab4.Services.SkillService
             var serviceResponse = new ServiceResponse<GetSkillDto>();
             try
             {
-                var skill = skills.FirstOrDefault(s => s.SkillId == id);
-                if (skill is null)
+                var dbSkill = await _dataContext.Skills.FirstOrDefaultAsync(s => s.SkillId == id);
+                if (dbSkill is null)
                 {
                     throw new Exception($"Skill with id '{id}' not found.");
                 }
-                serviceResponse.Data = _mapper.Map<GetSkillDto>(skill);
+                serviceResponse.Data = _mapper.Map<GetSkillDto>(dbSkill);
             } catch (Exception ex)
             {
                 serviceResponse.Success = false;

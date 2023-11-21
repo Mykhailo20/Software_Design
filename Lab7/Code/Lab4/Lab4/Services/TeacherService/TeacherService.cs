@@ -11,15 +11,18 @@ namespace Lab4.Services.TeacherService
                 MiddleName = "Ivanovich", BirthDate = new DateOnly(1985, 07, 12), Style = TeachingStyle.Mentorship}
         };
         private readonly IMapper _mapper;
+        private readonly DataContext _dataContext;
 
-        public TeacherService(IMapper mapper)
+        public TeacherService(IMapper mapper, DataContext dataContext)
         {
             _mapper = mapper;
+            _dataContext = dataContext;
         }
         public async Task<ServiceResponse<List<GetTeacherDto>>> GetAllTeachers()
         {
             var serviceResponse = new ServiceResponse<List<GetTeacherDto>>();
-            serviceResponse.Data = teachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToList();
+            var dbTeachers = await _dataContext.Teachers.ToListAsync();
+            serviceResponse.Data = dbTeachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToList();
             return serviceResponse;
         }
 
@@ -28,12 +31,12 @@ namespace Lab4.Services.TeacherService
             var serviceResponse = new ServiceResponse<GetTeacherDto>();
             try
             {
-                var teacher = teachers.FirstOrDefault(t => t.TeacherId == id);
-                if (teacher is null)
+                var dbTeacher = await _dataContext.Teachers.FirstOrDefaultAsync(t => t.TeacherId == id);
+                if (dbTeacher is null)
                 {
                     throw new Exception($"Teacher with id '{id}' not found.");
                 }
-                serviceResponse.Data = _mapper.Map<GetTeacherDto>(teacher);
+                serviceResponse.Data = _mapper.Map<GetTeacherDto>(dbTeacher);
             } catch (Exception ex)
             {
                 serviceResponse.Success = false;
