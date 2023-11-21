@@ -75,17 +75,19 @@ namespace Lab4.Services.SkillService
                     throw new Exception($"Skill with id '{updatedSkill.SkillId}' not found.");
                 }
 
+                _mapper.Map<Skill>(updatedSkill);
+
                 skill.Name = updatedSkill.Name;
                 skill.Level = updatedSkill.Level;
                 skill.Description = updatedSkill.Description;
 
                 serviceResponse.Data = _mapper.Map<GetSkillDto>(skill);
+                serviceResponse.Message = "Changes saved successfully.";
             } catch (Exception ex)
             {
                 serviceResponse.Success = false;
                 serviceResponse.Message = ex.Message;
             }
-            
             return serviceResponse;
         }
     }

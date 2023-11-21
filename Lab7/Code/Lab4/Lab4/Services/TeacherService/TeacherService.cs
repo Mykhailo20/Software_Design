@@ -39,6 +39,7 @@ namespace Lab4.Services.TeacherService
                 serviceResponse.Success = false;
                 serviceResponse.Message = ex.Message;
             }
+            
             return serviceResponse;
         }
 
@@ -62,6 +63,9 @@ namespace Lab4.Services.TeacherService
                 {
                     throw new Exception($"Teacher with id '{updatedTeacher.TeacherId}' not found.");
                 }
+
+                _mapper.Map<Teacher>(updatedTeacher);
+
                 teacher.FirstName = updatedTeacher.FirstName;
                 teacher.LastName = updatedTeacher.LastName;
                 teacher.MiddleName = updatedTeacher.MiddleName;
@@ -69,6 +73,7 @@ namespace Lab4.Services.TeacherService
                 teacher.Style = updatedTeacher.Style;
 
                 serviceResponse.Data = _mapper.Map<GetTeacherDto>(teacher);
+                serviceResponse.Message = "Changes saved successfully.";
             } catch(Exception ex)
             {
                 serviceResponse.Success = false;
