@@ -31,5 +31,11 @@ namespace Lab4.Controllers
         {
             return Ok(await _skillService.AddSkill(newSkill));
         }
+
+        [HttpPut]
+        public async Task<ActionResult<ServiceResponse<List<GetSkillDto>>>> UpdateSkill(UpdateSkillDto updatedSkill)
+        {
+            return Ok(await _skillService.UpdateSkill(updatedSkill));
+        }
     }
 }

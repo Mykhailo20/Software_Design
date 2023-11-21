@@ -30,5 +30,11 @@ namespace Lab4.Controllers
         {
             return Ok(await _teacherService.AddTeacher(newTeacher));
         }
+
+        [HttpPut]
+        public async Task<ActionResult<ServiceResponse<List<GetTeacherDto>>>> UpdateTeacher(UpdateTeacherDto updatedTeacher)
+        {
+            return Ok(await _teacherService.UpdateTeacher(updatedTeacher));
+        }
     }
 }

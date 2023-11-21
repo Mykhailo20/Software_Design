@@ -40,5 +40,20 @@ namespace Lab4.Services.TeacherService
             serviceResponse.Data = teachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToList();
             return serviceResponse;
         }
+
+        public async Task<ServiceResponse<GetTeacherDto>> UpdateTeacher(UpdateTeacherDto updatedTeacher)
+        {
+            var serviceResponse = new ServiceResponse<GetTeacherDto>();
+            var teacher = teachers.FirstOrDefault(t => t.TeacherId == updatedTeacher.TeacherId);
+
+            teacher.FirstName = updatedTeacher.FirstName;
+            teacher.LastName = updatedTeacher.LastName;
+            teacher.MiddleName = updatedTeacher.MiddleName;
+            teacher.BirthDate = updatedTeacher.BirthDate;
+            teacher.Style = updatedTeacher.Style;
+
+            serviceResponse.Data = _mapper.Map<GetTeacherDto>(teacher);
+            return serviceResponse;
+        }
     }
 }

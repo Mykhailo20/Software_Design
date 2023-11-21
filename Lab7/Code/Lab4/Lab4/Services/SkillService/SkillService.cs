@@ -51,5 +51,18 @@ namespace Lab4.Services.SkillService
             serviceResponse.Data = skills.Select(s => _mapper.Map<GetSkillDto>(s)).ToList();
             return serviceResponse;
         }
+
+        public async Task<ServiceResponse<GetSkillDto>> UpdateSkill(UpdateSkillDto updatedSkill)
+        {
+            var serviceResponse = new ServiceResponse<GetSkillDto>();
+            var skill = skills.FirstOrDefault(s => s.SkillId == updatedSkill.SkillId);
+
+            skill.Name = updatedSkill.Name;
+            skill.Level = updatedSkill.Level;
+            skill.Description = updatedSkill.Description;
+
+            serviceResponse.Data = _mapper.Map<GetSkillDto>(skill);
+            return serviceResponse;
+        }
     }
 }
