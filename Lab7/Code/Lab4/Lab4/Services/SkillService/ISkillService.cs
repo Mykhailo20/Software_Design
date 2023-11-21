@@ -2,8 +2,8 @@
 {
     public interface ISkillService
     {
-        List<Skill> GetAllSkills();
-        Skill GetSkillById(int id);
-        List<Skill> AddSkill(Skill newSkill);
+        Task<List<Skill>> GetAllSkills();
+        Task<Skill> GetSkillById(int id);
+        Task<List<Skill>> AddSkill(Skill newSkill);
     }
 }

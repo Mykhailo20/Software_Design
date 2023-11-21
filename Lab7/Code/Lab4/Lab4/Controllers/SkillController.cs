@@ -15,21 +15,21 @@ namespace Lab4.Controllers
         }
 
         [HttpGet("GetAll")]
-        public ActionResult<List<Skill>> GetAll()
+        public async Task<ActionResult<List<Skill>>> GetAll()
         {
-            return Ok(_skillService.GetAllSkills());
+            return Ok(await _skillService.GetAllSkills());
         }
 
         [HttpGet("GetSingle{id}")]
-        public ActionResult<Skill> GetSingle(int id)
+        public async Task<ActionResult<Skill>> GetSingle(int id)
         {
-            return Ok(_skillService.GetSkillById(id));
+            return Ok(await _skillService.GetSkillById(id));
         }
 
         [HttpPost]
-        public ActionResult<List<Skill>> AddSkill(Skill newSkill)
+        public async Task<ActionResult<List<Skill>>> AddSkill(Skill newSkill)
         {
-            return Ok(_skillService.AddSkill(newSkill));
+            return Ok(await _skillService.AddSkill(newSkill));
         }
     }
 }

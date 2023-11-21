@@ -18,12 +18,12 @@
             }
         };
 
-        public List<Skill> GetAllSkills()
+        public async Task<List<Skill>> GetAllSkills()
         {
             return skills;
         }
 
-        public Skill GetSkillById(int id)
+        public async Task<Skill> GetSkillById(int id)
         {
             var skill = skills.FirstOrDefault(s => s.SkillId == id);
             if(skill is not null)
@@ -33,7 +33,7 @@
             throw new Exception("Skill not found");
         }
 
-        public List<Skill> AddSkill(Skill newSkill)
+        public async Task<List<Skill>> AddSkill(Skill newSkill)
         {
             skills.Add(newSkill);
             return skills;

@@ -10,12 +10,12 @@ namespace Lab4.Services.TeacherService
             new Teacher{ TeacherId = 1, FirstName = "Ivan", LastName = "Ivanov",
                 MiddleName = "Ivanovich", BirthDate = new DateOnly(1985, 07, 12), Style = TeachingStyle.Mentorship}
         };
-        public List<Teacher> GetAllTeachers()
+        public async Task<List<Teacher>> GetAllTeachers()
         {
             return teachers;
         }
 
-        public Teacher GetTeacherById(int id)
+        public async Task<Teacher> GetTeacherById(int id)
         {
             var teacher = teachers.FirstOrDefault(t => t.TeacherId == id);
             if(teacher is not null)
@@ -25,7 +25,7 @@ namespace Lab4.Services.TeacherService
             throw new Exception("Teacher not found");
         }
 
-        public List<Teacher> AddTeacher(Teacher newTeacher)
+        public async Task<List<Teacher>> AddTeacher(Teacher newTeacher)
         {
             teachers.Add(newTeacher);
             return teachers;
