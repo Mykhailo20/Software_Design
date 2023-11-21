@@ -4,22 +4,6 @@ namespace Lab4.Services.SkillService
 {
     public class SkillService : ISkillService
     {
-        public static List<Skill> skills = new List<Skill>
-        {
-            new Skill {
-                SkillId = 0,
-                Name = "Data Cleaning",
-                Level = 5,
-                Description = "Clean the data from missing values and anomalies"
-            },
-             new Skill {
-                 SkillId = 1,
-                 Name = "Data Preparation",
-                 Level = 7,
-                 Description = "Transform the data into a form that will be used to train the ML model"
-            }
-        };
-
         private readonly IMapper _mapper;
         private readonly DataContext _dataContext;
 
@@ -104,16 +88,17 @@ namespace Lab4.Services.SkillService
             var serviceResponse = new ServiceResponse<List<GetSkillDto>>();
             try
             {
-                var skill = skills.FirstOrDefault(s => s.SkillId == id);
-                if (skill is null)
+                var dbSkill = await _dataContext.Skills.FirstOrDefaultAsync(s => s.SkillId == id);
+                if (dbSkill is null)
                 {
                     throw new Exception($"Skill with id '{id}' not found.");
                 }
 
 
-                skills.Remove(skill);
+                _dataContext.Skills.Remove(dbSkill);
+                await _dataContext.SaveChangesAsync();
 
-                serviceResponse.Data = skills.Select(s => _mapper.Map<GetSkillDto>(s)).ToList();
+                serviceResponse.Data = await _dataContext.Skills.Select(s => _mapper.Map<GetSkillDto>(s)).ToListAsync();
                 serviceResponse.Message = "Record deleted successfully.";
             }
             catch (Exception ex)

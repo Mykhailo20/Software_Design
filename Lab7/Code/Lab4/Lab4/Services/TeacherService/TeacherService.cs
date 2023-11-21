@@ -4,12 +4,6 @@ namespace Lab4.Services.TeacherService
 {
     public class TeacherService : ITeacherService
     {
-        public static List<Teacher> teachers = new List<Teacher>
-        {
-            new Teacher(),
-            new Teacher{ TeacherId = 1, FirstName = "Ivan", LastName = "Ivanov",
-                MiddleName = "Ivanovich", BirthDate = new DateOnly(1985, 07, 12), Style = TeachingStyle.Mentorship}
-        };
         private readonly IMapper _mapper;
         private readonly DataContext _dataContext;
 
@@ -95,16 +89,18 @@ namespace Lab4.Services.TeacherService
             var serviceResponse = new ServiceResponse<List<GetTeacherDto>>();
             try
             {
-                var teacher = teachers.FirstOrDefault(t => t.TeacherId == id);
-                if (teacher is null)
+                var dbTeacher = await _dataContext.Teachers.FirstOrDefaultAsync(t => t.TeacherId == id);
+                if (dbTeacher is null)
                 {
                     throw new Exception($"Teacher with id '{id}' not found.");
                 }
 
 
-                teachers.Remove(teacher);
+                _dataContext.Teachers.Remove(dbTeacher);
+                await _dataContext.SaveChangesAsync();
 
-                serviceResponse.Data = teachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToList();
+                serviceResponse.Data = 
+                    await _dataContext.Teachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToListAsync();
                 serviceResponse.Message = "Record deleted successfully.";
             }
             catch (Exception ex)
