@@ -46,5 +46,16 @@ namespace Lab4.Controllers
             }
             return Ok(response);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ServiceResponse<GetTeacherDto>>> DeleteTeacher(int id)
+        {
+            var response = await _teacherService.DeleteTeacher(id);
+            if (response.Data is null)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }

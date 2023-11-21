@@ -61,6 +61,7 @@ namespace Lab4.Services.SkillService
             skill.SkillId = skills.Max(s => s.SkillId) + 1;
             skills.Add(skill);
             serviceResponse.Data = skills.Select(s => _mapper.Map<GetSkillDto>(s)).ToList();
+            serviceResponse.Message = "New record successfully added.";
             return serviceResponse;
         }
 
@@ -88,6 +89,32 @@ namespace Lab4.Services.SkillService
                 serviceResponse.Success = false;
                 serviceResponse.Message = ex.Message;
             }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<List<GetSkillDto>>> DeleteSkill(int id)
+        {
+            var serviceResponse = new ServiceResponse<List<GetSkillDto>>();
+            try
+            {
+                var skill = skills.FirstOrDefault(s => s.SkillId == id);
+                if (skill is null)
+                {
+                    throw new Exception($"Skill with id '{id}' not found.");
+                }
+
+
+                skills.Remove(skill);
+
+                serviceResponse.Data = skills.Select(s => _mapper.Map<GetSkillDto>(s)).ToList();
+                serviceResponse.Message = "Record deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+
             return serviceResponse;
         }
     }

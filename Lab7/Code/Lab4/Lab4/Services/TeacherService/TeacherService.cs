@@ -50,6 +50,7 @@ namespace Lab4.Services.TeacherService
             teacher.TeacherId = teachers.Max(c => c.TeacherId) + 1;
             teachers.Add(teacher);
             serviceResponse.Data = teachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToList();
+            serviceResponse.Message = "New record successfully added.";
             return serviceResponse;
         }
 
@@ -80,6 +81,32 @@ namespace Lab4.Services.TeacherService
                 serviceResponse.Message = ex.Message;
             }
             
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<List<GetTeacherDto>>> DeleteTeacher(int id)
+        {
+            var serviceResponse = new ServiceResponse<List<GetTeacherDto>>();
+            try
+            {
+                var teacher = teachers.FirstOrDefault(t => t.TeacherId == id);
+                if (teacher is null)
+                {
+                    throw new Exception($"Teacher with id '{id}' not found.");
+                }
+
+
+                teachers.Remove(teacher);
+
+                serviceResponse.Data = teachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToList();
+                serviceResponse.Message = "Record deleted successfully.";
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+
             return serviceResponse;
         }
     }

@@ -6,5 +6,6 @@
         Task<ServiceResponse<GetTeacherDto>> GetTeacherById(int id);
         Task<ServiceResponse<List<GetTeacherDto>>> AddTeacher(AddTeacherDto newTeacher);
         Task<ServiceResponse<GetTeacherDto>> UpdateTeacher(UpdateTeacherDto updatedTeacher);
+        Task<ServiceResponse<List<GetTeacherDto>>> DeleteTeacher(int id);
     }
 }
