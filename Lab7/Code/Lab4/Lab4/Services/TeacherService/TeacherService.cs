@@ -10,26 +10,34 @@ namespace Lab4.Services.TeacherService
             new Teacher{ TeacherId = 1, FirstName = "Ivan", LastName = "Ivanov",
                 MiddleName = "Ivanovich", BirthDate = new DateOnly(1985, 07, 12), Style = TeachingStyle.Mentorship}
         };
-        public async Task<ServiceResponse<List<Teacher>>> GetAllTeachers()
+        private readonly IMapper _mapper;
+
+        public TeacherService(IMapper mapper)
         {
-            var serviceResponse = new ServiceResponse<List<Teacher>>();
-            serviceResponse.Data = teachers;
+            _mapper = mapper;
+        }
+        public async Task<ServiceResponse<List<GetTeacherDto>>> GetAllTeachers()
+        {
+            var serviceResponse = new ServiceResponse<List<GetTeacherDto>>();
+            serviceResponse.Data = teachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToList();
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<Teacher>> GetTeacherById(int id)
+        public async Task<ServiceResponse<GetTeacherDto>> GetTeacherById(int id)
         {
-            var serviceResponse = new ServiceResponse<Teacher>();
+            var serviceResponse = new ServiceResponse<GetTeacherDto>();
             var teacher = teachers.FirstOrDefault(t => t.TeacherId == id);
-            serviceResponse.Data = teacher;
+            serviceResponse.Data = _mapper.Map<GetTeacherDto>(teacher);
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<Teacher>>> AddTeacher(Teacher newTeacher)
+        public async Task<ServiceResponse<List<GetTeacherDto>>> AddTeacher(AddTeacherDto newTeacher)
         {
-            var serviceResponse = new ServiceResponse<List<Teacher>>();
-            teachers.Add(newTeacher);
-            serviceResponse.Data = teachers;
+            var serviceResponse = new ServiceResponse<List<GetTeacherDto>>();
+            var teacher = _mapper.Map<Teacher>(newTeacher);
+            teacher.TeacherId = teachers.Max(c => c.TeacherId) + 1;
+            teachers.Add(teacher);
+            serviceResponse.Data = teachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToList();
             return serviceResponse;
         }
     }

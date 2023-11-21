@@ -14,19 +14,19 @@ namespace Lab4.Controllers
         }
 
         [HttpGet("GetAll")]
-        public async Task<ActionResult<ServiceResponse<List<Teacher>>>> GetAll()
+        public async Task<ActionResult<ServiceResponse<List<GetTeacherDto>>>> GetAll()
         {
             return Ok(await _teacherService.GetAllTeachers());
         }
 
         [HttpGet("GetSingle{id}")]
-        public async Task<ActionResult<ServiceResponse<Teacher>>> GetSingle(int id)
+        public async Task<ActionResult<ServiceResponse<GetTeacherDto>>> GetSingle(int id)
         {
             return Ok(await _teacherService.GetTeacherById(id));
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<Teacher>>>> AddTeacher(Teacher newTeacher)
+        public async Task<ActionResult<ServiceResponse<List<GetTeacherDto>>>> AddTeacher(AddTeacherDto newTeacher)
         {
             return Ok(await _teacherService.AddTeacher(newTeacher));
         }

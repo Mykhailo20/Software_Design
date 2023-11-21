@@ -1,4 +1,6 @@
-﻿namespace Lab4.Services.SkillService
+﻿using Lab4.Models;
+
+namespace Lab4.Services.SkillService
 {
     public class SkillService : ISkillService
     {
@@ -18,26 +20,35 @@
             }
         };
 
-        public async Task<ServiceResponse<List<Skill>>> GetAllSkills()
+        private readonly IMapper _mapper;
+
+        public SkillService(IMapper mapper)
         {
-            var serviceResponse = new ServiceResponse<List<Skill>>();
-            serviceResponse.Data = skills;
+            _mapper = mapper;
+        }
+
+        public async Task<ServiceResponse<List<GetSkillDto>>> GetAllSkills()
+        {
+            var serviceResponse = new ServiceResponse<List<GetSkillDto>>();
+            serviceResponse.Data = skills.Select(s => _mapper.Map<GetSkillDto>(s)).ToList();
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<Skill>> GetSkillById(int id)
+        public async Task<ServiceResponse<GetSkillDto>> GetSkillById(int id)
         {
-            var serviceResponse = new ServiceResponse<Skill>();
+            var serviceResponse = new ServiceResponse<GetSkillDto>();
             var skill = skills.FirstOrDefault(s => s.SkillId == id);
-            serviceResponse.Data = skill;
+            serviceResponse.Data = _mapper.Map<GetSkillDto>(skill); ;
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<Skill>>> AddSkill(Skill newSkill)
+        public async Task<ServiceResponse<List<GetSkillDto>>> AddSkill(AddSkillDto newSkill)
         {
-            var serviceResponse = new ServiceResponse<List<Skill>>();
-            skills.Add(newSkill);
-            serviceResponse.Data = skills;
+            var serviceResponse = new ServiceResponse<List<GetSkillDto>>();
+            var skill = _mapper.Map<Skill>(newSkill);
+            skill.SkillId = skills.Max(s => s.SkillId) + 1;
+            skills.Add(skill);
+            serviceResponse.Data = skills.Select(s => _mapper.Map<GetSkillDto>(s)).ToList();
             return serviceResponse;
         }
     }

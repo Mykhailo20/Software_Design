@@ -2,8 +2,8 @@
 {
     public interface ITeacherService
     {
-        Task<ServiceResponse<List<Teacher>>> GetAllTeachers();
-        Task<ServiceResponse<Teacher>> GetTeacherById(int id);
-        Task<ServiceResponse<List<Teacher>>> AddTeacher(Teacher newTeacher);
+        Task<ServiceResponse<List<GetTeacherDto>>> GetAllTeachers();
+        Task<ServiceResponse<GetTeacherDto>> GetTeacherById(int id);
+        Task<ServiceResponse<List<GetTeacherDto>>> AddTeacher(AddTeacherDto newTeacher);
     }
 }
