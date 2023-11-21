@@ -6,30 +6,29 @@ namespace Lab4.Controllers
     [Route("api/[controller]")]
     public class TeacherController: ControllerBase
     {
-        public static List<Teacher> teachers = new List<Teacher>
+        private readonly ITeacherService _teacherService;
+
+        public TeacherController(ITeacherService teacherService)
         {
-            new Teacher(),
-            new Teacher{ TeacherId = 1, FirstName = "Ivan", LastName = "Ivanov", 
-                MiddleName = "Ivanovich", BirthDate = new DateOnly(1985, 07, 12), Style = TeachingStyle.Mentorship}
-        };
+            _teacherService = teacherService;
+        }
 
         [HttpGet("GetAll")]
         public ActionResult<List<Teacher>> GetAll()
         {
-            return Ok(teachers);
+            return Ok(_teacherService.GetAllTeachers());
         }
 
         [HttpGet("GetSingle{id}")]
         public ActionResult<Teacher> GetSingle(int id)
         {
-            return Ok(teachers.FirstOrDefault(t => t.TeacherId == id));
+            return Ok(_teacherService.GetTeacherById(id));
         }
 
         [HttpPost]
         public ActionResult<List<Teacher>> AddTeacher(Teacher newTeacher)
         {
-            teachers.Add(newTeacher);
-            return Ok(teachers);
+            return Ok(_teacherService.AddTeacher(newTeacher));
         }
     }
 }

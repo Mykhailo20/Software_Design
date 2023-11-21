@@ -7,39 +7,29 @@ namespace Lab4.Controllers
     [Route("api/[controller]")]
     public class SkillController : ControllerBase
     {
-        public static List<Skill> skills = new List<Skill>
+        private readonly ISkillService _skillService;
+
+        public SkillController(ISkillService skillService)
         {
-            new Skill { 
-                SkillId = 0,
-                Name = "Data Cleaning",
-                Level = 5,
-                Description = "Clean the data from missing values and anomalies"
-            },
-             new Skill { 
-                 SkillId = 1,
-                 Name = "Data Preparation",
-                 Level = 7,
-                 Description = "Transform the data into a form that will be used to train the ML model"
-            }
-        };
+            _skillService = skillService;
+        }
 
         [HttpGet("GetAll")]
         public ActionResult<List<Skill>> GetAll()
         {
-            return Ok(skills);
+            return Ok(_skillService.GetAllSkills());
         }
 
         [HttpGet("GetSingle{id}")]
         public ActionResult<Skill> GetSingle(int id)
         {
-            return Ok(skills.FirstOrDefault(s => s.SkillId == id));
+            return Ok(_skillService.GetSkillById(id));
         }
 
         [HttpPost]
         public ActionResult<List<Skill>> AddSkill(Skill newSkill)
         {
-            skills.Add(newSkill);
-            return Ok(skills);
+            return Ok(_skillService.AddSkill(newSkill));
         }
     }
 }
