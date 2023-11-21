@@ -10,25 +10,27 @@ namespace Lab4.Services.TeacherService
             new Teacher{ TeacherId = 1, FirstName = "Ivan", LastName = "Ivanov",
                 MiddleName = "Ivanovich", BirthDate = new DateOnly(1985, 07, 12), Style = TeachingStyle.Mentorship}
         };
-        public async Task<List<Teacher>> GetAllTeachers()
+        public async Task<ServiceResponse<List<Teacher>>> GetAllTeachers()
         {
-            return teachers;
+            var serviceResponse = new ServiceResponse<List<Teacher>>();
+            serviceResponse.Data = teachers;
+            return serviceResponse;
         }
 
-        public async Task<Teacher> GetTeacherById(int id)
+        public async Task<ServiceResponse<Teacher>> GetTeacherById(int id)
         {
+            var serviceResponse = new ServiceResponse<Teacher>();
             var teacher = teachers.FirstOrDefault(t => t.TeacherId == id);
-            if(teacher is not null)
-            {
-                return teacher;
-            }
-            throw new Exception("Teacher not found");
+            serviceResponse.Data = teacher;
+            return serviceResponse;
         }
 
-        public async Task<List<Teacher>> AddTeacher(Teacher newTeacher)
+        public async Task<ServiceResponse<List<Teacher>>> AddTeacher(Teacher newTeacher)
         {
+            var serviceResponse = new ServiceResponse<List<Teacher>>();
             teachers.Add(newTeacher);
-            return teachers;
+            serviceResponse.Data = teachers;
+            return serviceResponse;
         }
     }
 }

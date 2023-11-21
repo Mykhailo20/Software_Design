@@ -18,25 +18,27 @@
             }
         };
 
-        public async Task<List<Skill>> GetAllSkills()
+        public async Task<ServiceResponse<List<Skill>>> GetAllSkills()
         {
-            return skills;
+            var serviceResponse = new ServiceResponse<List<Skill>>();
+            serviceResponse.Data = skills;
+            return serviceResponse;
         }
 
-        public async Task<Skill> GetSkillById(int id)
+        public async Task<ServiceResponse<Skill>> GetSkillById(int id)
         {
+            var serviceResponse = new ServiceResponse<Skill>();
             var skill = skills.FirstOrDefault(s => s.SkillId == id);
-            if(skill is not null)
-            {
-                return skill;
-            }
-            throw new Exception("Skill not found");
+            serviceResponse.Data = skill;
+            return serviceResponse;
         }
 
-        public async Task<List<Skill>> AddSkill(Skill newSkill)
+        public async Task<ServiceResponse<List<Skill>>> AddSkill(Skill newSkill)
         {
+            var serviceResponse = new ServiceResponse<List<Skill>>();
             skills.Add(newSkill);
-            return skills;
+            serviceResponse.Data = skills;
+            return serviceResponse;
         }
     }
 }
