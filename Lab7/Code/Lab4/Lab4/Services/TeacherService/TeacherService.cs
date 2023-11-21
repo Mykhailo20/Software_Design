@@ -50,9 +50,11 @@ namespace Lab4.Services.TeacherService
         {
             var serviceResponse = new ServiceResponse<List<GetTeacherDto>>();
             var teacher = _mapper.Map<Teacher>(newTeacher);
-            teacher.TeacherId = teachers.Max(c => c.TeacherId) + 1;
-            teachers.Add(teacher);
-            serviceResponse.Data = teachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToList();
+
+            _dataContext.Teachers.Add(teacher);
+            await _dataContext.SaveChangesAsync();
+            serviceResponse.Data = 
+                await _dataContext.Teachers.Select(t => _mapper.Map<GetTeacherDto>(t)).ToListAsync();
             serviceResponse.Message = "New record successfully added.";
             return serviceResponse;
         }

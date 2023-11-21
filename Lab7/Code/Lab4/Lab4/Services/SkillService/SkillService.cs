@@ -61,9 +61,11 @@ namespace Lab4.Services.SkillService
         {
             var serviceResponse = new ServiceResponse<List<GetSkillDto>>();
             var skill = _mapper.Map<Skill>(newSkill);
-            skill.SkillId = skills.Max(s => s.SkillId) + 1;
-            skills.Add(skill);
-            serviceResponse.Data = skills.Select(s => _mapper.Map<GetSkillDto>(s)).ToList();
+
+            _dataContext.Skills.Add(skill);
+            await _dataContext.SaveChangesAsync();
+            serviceResponse.Data = 
+                await _dataContext.Skills.Select(s => _mapper.Map<GetSkillDto>(s)).ToListAsync();
             serviceResponse.Message = "New record successfully added.";
             return serviceResponse;
         }
