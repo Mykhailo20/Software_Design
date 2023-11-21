@@ -64,21 +64,22 @@ namespace Lab4.Services.TeacherService
             var serviceResponse = new ServiceResponse<GetTeacherDto>();
             try
             {
-                var teacher = teachers.FirstOrDefault(t => t.TeacherId == updatedTeacher.TeacherId);
-                if(teacher is null)
+                var dbTeacher = await _dataContext.Teachers.FirstOrDefaultAsync(t => t.TeacherId == updatedTeacher.TeacherId);
+                if(dbTeacher is null)
                 {
                     throw new Exception($"Teacher with id '{updatedTeacher.TeacherId}' not found.");
                 }
 
                 _mapper.Map<Teacher>(updatedTeacher);
 
-                teacher.FirstName = updatedTeacher.FirstName;
-                teacher.LastName = updatedTeacher.LastName;
-                teacher.MiddleName = updatedTeacher.MiddleName;
-                teacher.BirthDate = updatedTeacher.BirthDate;
-                teacher.Style = updatedTeacher.Style;
+                dbTeacher.FirstName = updatedTeacher.FirstName;
+                dbTeacher.LastName = updatedTeacher.LastName;
+                dbTeacher.MiddleName = updatedTeacher.MiddleName;
+                dbTeacher.BirthDate = updatedTeacher.BirthDate;
+                dbTeacher.Style = updatedTeacher.Style;
 
-                serviceResponse.Data = _mapper.Map<GetTeacherDto>(teacher);
+                await _dataContext.SaveChangesAsync();
+                serviceResponse.Data = _mapper.Map<GetTeacherDto>(dbTeacher);
                 serviceResponse.Message = "Changes saved successfully.";
             } catch(Exception ex)
             {

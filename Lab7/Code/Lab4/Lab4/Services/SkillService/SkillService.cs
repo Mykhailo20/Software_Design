@@ -75,19 +75,21 @@ namespace Lab4.Services.SkillService
             var serviceResponse = new ServiceResponse<GetSkillDto>();
             try
             {
-                var skill = skills.FirstOrDefault(s => s.SkillId == updatedSkill.SkillId);
-                if (skill is null)
+                var dbSkill = await _dataContext.Skills.FirstOrDefaultAsync(s => s.SkillId == updatedSkill.SkillId);
+                if (dbSkill is null)
                 {
                     throw new Exception($"Skill with id '{updatedSkill.SkillId}' not found.");
                 }
 
                 _mapper.Map<Skill>(updatedSkill);
 
-                skill.Name = updatedSkill.Name;
-                skill.Level = updatedSkill.Level;
-                skill.Description = updatedSkill.Description;
+                dbSkill.Name = updatedSkill.Name;
+                dbSkill.Level = updatedSkill.Level;
+                dbSkill.Description = updatedSkill.Description;
 
-                serviceResponse.Data = _mapper.Map<GetSkillDto>(skill);
+                await _dataContext.SaveChangesAsync();
+
+                serviceResponse.Data = _mapper.Map<GetSkillDto>(dbSkill);
                 serviceResponse.Message = "Changes saved successfully.";
             } catch (Exception ex)
             {
