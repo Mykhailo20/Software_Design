@@ -55,13 +55,25 @@ namespace Lab4.Services.SkillService
         public async Task<ServiceResponse<GetSkillDto>> UpdateSkill(UpdateSkillDto updatedSkill)
         {
             var serviceResponse = new ServiceResponse<GetSkillDto>();
-            var skill = skills.FirstOrDefault(s => s.SkillId == updatedSkill.SkillId);
+            try
+            {
+                var skill = skills.FirstOrDefault(s => s.SkillId == updatedSkill.SkillId);
+                if (skill is null)
+                {
+                    throw new Exception($"Skill with id '{updatedSkill.SkillId}' not found.");
+                }
 
-            skill.Name = updatedSkill.Name;
-            skill.Level = updatedSkill.Level;
-            skill.Description = updatedSkill.Description;
+                skill.Name = updatedSkill.Name;
+                skill.Level = updatedSkill.Level;
+                skill.Description = updatedSkill.Description;
 
-            serviceResponse.Data = _mapper.Map<GetSkillDto>(skill);
+                serviceResponse.Data = _mapper.Map<GetSkillDto>(skill);
+            } catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+            
             return serviceResponse;
         }
     }

@@ -44,15 +44,26 @@ namespace Lab4.Services.TeacherService
         public async Task<ServiceResponse<GetTeacherDto>> UpdateTeacher(UpdateTeacherDto updatedTeacher)
         {
             var serviceResponse = new ServiceResponse<GetTeacherDto>();
-            var teacher = teachers.FirstOrDefault(t => t.TeacherId == updatedTeacher.TeacherId);
+            try
+            {
+                var teacher = teachers.FirstOrDefault(t => t.TeacherId == updatedTeacher.TeacherId);
+                if(teacher is null)
+                {
+                    throw new Exception($"Teacher with id '{updatedTeacher.TeacherId}' not found.");
+                }
+                teacher.FirstName = updatedTeacher.FirstName;
+                teacher.LastName = updatedTeacher.LastName;
+                teacher.MiddleName = updatedTeacher.MiddleName;
+                teacher.BirthDate = updatedTeacher.BirthDate;
+                teacher.Style = updatedTeacher.Style;
 
-            teacher.FirstName = updatedTeacher.FirstName;
-            teacher.LastName = updatedTeacher.LastName;
-            teacher.MiddleName = updatedTeacher.MiddleName;
-            teacher.BirthDate = updatedTeacher.BirthDate;
-            teacher.Style = updatedTeacher.Style;
-
-            serviceResponse.Data = _mapper.Map<GetTeacherDto>(teacher);
+                serviceResponse.Data = _mapper.Map<GetTeacherDto>(teacher);
+            } catch(Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+            
             return serviceResponse;
         }
     }

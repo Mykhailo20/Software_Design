@@ -35,7 +35,12 @@ namespace Lab4.Controllers
         [HttpPut]
         public async Task<ActionResult<ServiceResponse<List<GetSkillDto>>>> UpdateSkill(UpdateSkillDto updatedSkill)
         {
-            return Ok(await _skillService.UpdateSkill(updatedSkill));
+            var response = await _skillService.UpdateSkill(updatedSkill);
+            if(response.Data is null)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
         }
     }
 }

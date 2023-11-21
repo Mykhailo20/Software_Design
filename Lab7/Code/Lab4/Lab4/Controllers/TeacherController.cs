@@ -34,7 +34,12 @@ namespace Lab4.Controllers
         [HttpPut]
         public async Task<ActionResult<ServiceResponse<List<GetTeacherDto>>>> UpdateTeacher(UpdateTeacherDto updatedTeacher)
         {
-            return Ok(await _teacherService.UpdateTeacher(updatedTeacher));
+            var response = await _teacherService.UpdateTeacher(updatedTeacher);
+            if(response.Data is null)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
         }
     }
 }
