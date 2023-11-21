@@ -25,7 +25,12 @@
 
         public Skill GetSkillById(int id)
         {
-            return skills.FirstOrDefault(s => s.SkillId == id);
+            var skill = skills.FirstOrDefault(s => s.SkillId == id);
+            if(skill is not null)
+            {
+                return skill;
+            }
+            throw new Exception("Skill not found");
         }
 
         public List<Skill> AddSkill(Skill newSkill)

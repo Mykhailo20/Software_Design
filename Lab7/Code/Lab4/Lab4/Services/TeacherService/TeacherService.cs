@@ -17,7 +17,12 @@ namespace Lab4.Services.TeacherService
 
         public Teacher GetTeacherById(int id)
         {
-            return teachers.FirstOrDefault(t => t.TeacherId == id);
+            var teacher = teachers.FirstOrDefault(t => t.TeacherId == id);
+            if(teacher is not null)
+            {
+                return teacher;
+            }
+            throw new Exception("Teacher not found");
         }
 
         public List<Teacher> AddTeacher(Teacher newTeacher)
