@@ -37,8 +37,20 @@ namespace Lab4.Services.SkillService
         public async Task<ServiceResponse<GetSkillDto>> GetSkillById(int id)
         {
             var serviceResponse = new ServiceResponse<GetSkillDto>();
-            var skill = skills.FirstOrDefault(s => s.SkillId == id);
-            serviceResponse.Data = _mapper.Map<GetSkillDto>(skill); ;
+            try
+            {
+                var skill = skills.FirstOrDefault(s => s.SkillId == id);
+                if (skill is null)
+                {
+                    throw new Exception($"Skill with id '{id}' not found.");
+                }
+                serviceResponse.Data = _mapper.Map<GetSkillDto>(skill);
+            } catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+            
             return serviceResponse;
         }
 

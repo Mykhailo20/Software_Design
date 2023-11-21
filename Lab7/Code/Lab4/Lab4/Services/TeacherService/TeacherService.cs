@@ -26,8 +26,19 @@ namespace Lab4.Services.TeacherService
         public async Task<ServiceResponse<GetTeacherDto>> GetTeacherById(int id)
         {
             var serviceResponse = new ServiceResponse<GetTeacherDto>();
-            var teacher = teachers.FirstOrDefault(t => t.TeacherId == id);
-            serviceResponse.Data = _mapper.Map<GetTeacherDto>(teacher);
+            try
+            {
+                var teacher = teachers.FirstOrDefault(t => t.TeacherId == id);
+                if (teacher is null)
+                {
+                    throw new Exception($"Teacher with id '{id}' not found.");
+                }
+                serviceResponse.Data = _mapper.Map<GetTeacherDto>(teacher);
+            } catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
             return serviceResponse;
         }
 

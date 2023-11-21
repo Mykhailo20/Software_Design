@@ -22,7 +22,12 @@ namespace Lab4.Controllers
         [HttpGet("GetSingle{id}")]
         public async Task<ActionResult<ServiceResponse<GetTeacherDto>>> GetSingle(int id)
         {
-            return Ok(await _teacherService.GetTeacherById(id));
+            var response = await _teacherService.GetTeacherById(id);
+            if (response.Data is null)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
         }
 
         [HttpPost]
