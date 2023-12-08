@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ITeacher } from '../entities/teacher';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -12,7 +11,6 @@ export class TeacherService {
 
   constructor(private _http: HttpClient) {}
   getTeachers(): Observable<any>{
-    console.log("Inside getTeachers");
     return this._http.get<any>(this._getTeachersUrl);
   }
 }

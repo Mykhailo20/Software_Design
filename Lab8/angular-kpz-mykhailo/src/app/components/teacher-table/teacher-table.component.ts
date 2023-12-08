@@ -12,8 +12,6 @@ export class TeacherTableComponent{
   public tableFields: string[] = ['teacherId', 'firstName', 'lastName', 'middleName', 'birthDate', 'style'];
 
   constructor(private _teacherService: TeacherService) {
-    
-    console.log("Inside TeacherTable constructor");
     this._teacherService.getTeachers()
         .subscribe(data => this.teachers = data.data);
   }
