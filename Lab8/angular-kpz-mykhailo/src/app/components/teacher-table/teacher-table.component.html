@@ -11,8 +11,8 @@
           <td>{{ teacher.firstName }}</td>
           <td>{{ teacher.lastName }}</td>
           <td>{{ teacher.middleName }}</td>
-          <td>{{ teacher.birthDate | date:'shortDate' }}</td>
-          <td>{{ teacher.style }}</td>
+          <td>{{ teacher.birthDate | date:'yyyy-MM-dd' }}</td>
+          <td>{{ teacher.style | teachingStyle }}</td>
         </tr>
       </tbody>
     </table>
