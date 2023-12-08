@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TeacherTableComponent } from './components/teacher-table/teacher-table.component';
+import { TeacherService } from './services/teacher.service';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,7 @@ import { TeacherTableComponent } from './components/teacher-table/teacher-table.
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [TeacherService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
