@@ -6,12 +6,15 @@ import { AppComponent } from './app.component';
 import { TeacherTableComponent } from './components/teacher-table/teacher-table.component';
 import { TeacherService } from './services/teacher.service';
 import { TeachingStylePipe } from './pipes/teaching-style.pipe';
+import { BlueBackgroundDirective } from './directives/blue-background.directive';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     TeacherTableComponent,
-    TeachingStylePipe
+    TeachingStylePipe,
+    BlueBackgroundDirective
   ],
   imports: [
     BrowserModule,
