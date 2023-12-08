@@ -1,0 +1,21 @@
+<div class="teacher-table">
+    <table>
+      <thead>
+        <!-- Dynamically generate table headers based on the fields of the teacher table -->
+        <tr>
+          <th *ngFor="let field of tableFields">{{ field }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Iterate over the teacher data and display corresponding values -->
+        <tr *ngFor="let teacher of teachers">
+          <td>{{ teacher.teacherId }}</td>
+          <td>{{ teacher.firstName }}</td>
+          <td>{{ teacher.lastName }}</td>
+          <td>{{ teacher.middleName }}</td>
+          <td>{{ teacher.birthDate | date:'shortDate' }}</td>
+          <td>{{ teacher.style }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
