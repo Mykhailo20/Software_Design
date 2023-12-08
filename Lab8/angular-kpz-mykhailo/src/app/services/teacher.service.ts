@@ -1,15 +1,18 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ITeacher } from '../entities/teacher';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TeacherService {
 
-  constructor() { }
-  getTeachers(){
-    return [
-      {"teacherId": 1, "firstName": "John", "lastName": "Doe", "middleName": "Antonovich", "birthDate": "1990-05-15", "style": "LectureBased"},
-      {"teacherId": 2, "firstName": "Ivan", "lastName": "Ivanov", "middleName": "Ivanovich", "birthDate": "1985-07-12", "style": "Mentorship"}
-    ];
+  private _getTeachersUrl: string = 'http://localhost:5018/api/Teacher/GetAll';
+
+  constructor(private _http: HttpClient) {}
+  getTeachers(): Observable<any>{
+    console.log("Inside getTeachers");
+    return this._http.get<any>(this._getTeachersUrl);
   }
 }

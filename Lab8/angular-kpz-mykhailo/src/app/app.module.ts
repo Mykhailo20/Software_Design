@@ -7,6 +7,7 @@ import { TeacherTableComponent } from './components/teacher-table/teacher-table.
 import { TeacherService } from './services/teacher.service';
 import { TeachingStylePipe } from './pipes/teaching-style.pipe';
 import { BlueBackgroundDirective } from './directives/blue-background.directive';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { BlueBackgroundDirective } from './directives/blue-background.directive'
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [TeacherService],
   bootstrap: [AppComponent]

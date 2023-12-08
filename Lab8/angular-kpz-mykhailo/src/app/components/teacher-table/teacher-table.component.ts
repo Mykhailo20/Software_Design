@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TeacherService } from '../../services/teacher.service';
+import { ITeacher } from '../../entities/teacher';
 
 @Component({
   selector: 'app-teacher-table',
@@ -7,11 +8,13 @@ import { TeacherService } from '../../services/teacher.service';
   styleUrl: './teacher-table.component.css'
 })
 export class TeacherTableComponent{
-  public teachers: any[];
+  public teachers: ITeacher[] = [];
   public tableFields: string[] = ['teacherId', 'firstName', 'lastName', 'middleName', 'birthDate', 'style'];
 
   constructor(private _teacherService: TeacherService) {
-    this.teachers = this._teacherService.getTeachers();
+    
+    console.log("Inside TeacherTable constructor");
+    this._teacherService.getTeachers()
+        .subscribe(data => this.teachers = data.data);
   }
-
 }
