@@ -9,6 +9,7 @@ import { BlueBackgroundDirective } from './directives/blue-background.directive'
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { headerInterceptor } from './interceptors/header.interceptor';
 import { SkillService } from './services/skill.service';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { SkillService } from './services/skill.service';
     routingComponents,
     TeachingStylePipe,
     BlueBackgroundDirective,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
