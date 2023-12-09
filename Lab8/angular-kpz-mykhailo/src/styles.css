@@ -16,12 +16,6 @@
   border-radius: 5px;
 }
 
-.center-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .btn {
   display: inline-block;
   background: #000;
