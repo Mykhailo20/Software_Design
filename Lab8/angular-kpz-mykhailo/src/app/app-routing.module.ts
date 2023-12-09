@@ -5,6 +5,7 @@ import { SkillTableComponent } from './components/skill-table/skill-table.compon
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: '/teachers', pathMatch: 'full' },
   { path: 'teachers', component: TeacherTableComponent },
   { path: 'skills', component: SkillTableComponent },
   { path: '**', component: PageNotFoundComponent }
