@@ -1,0 +1,17 @@
+<div class="skill-table">
+    <table>
+      <thead>
+        <tr>
+          <th *ngFor="let field of tableFields">{{ field }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let skill of skills">
+          <td>{{ skill.skillId }}</td>
+          <td>{{ skill.name }}</td>
+          <td>{{ skill.level }}</td>
+          <td>{{ skill.description }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

@@ -1,0 +1,18 @@
+.skill-table {
+    margin-top: 25px;
+}
+  
+  table {
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  th {
+    font-weight: bold;
+    background-color: rgba(249, 249, 53, 0.93);
+  }

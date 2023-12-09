@@ -9,6 +9,8 @@ import { TeachingStylePipe } from './pipes/teaching-style.pipe';
 import { BlueBackgroundDirective } from './directives/blue-background.directive';
 import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { headerInterceptor } from './interceptors/header.interceptor';
+import { SkillTableComponent } from './components/skill-table/skill-table.component';
+import { SkillService } from './services/skill.service';
 
 
 @NgModule({
@@ -16,7 +18,8 @@ import { headerInterceptor } from './interceptors/header.interceptor';
     AppComponent,
     TeacherTableComponent,
     TeachingStylePipe,
-    BlueBackgroundDirective
+    BlueBackgroundDirective,
+    SkillTableComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +28,7 @@ import { headerInterceptor } from './interceptors/header.interceptor';
   ],
   providers: [
     TeacherService,
+    SkillService,
     provideHttpClient(withInterceptors([
       headerInterceptor
     ]))
